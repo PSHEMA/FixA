@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "978477640072",
+    "project_id": "fixmyarea-capstone",
+    "storage_bucket": "fixmyarea-capstone.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978477640072:android:44e011f271fe639b48b23d",
+        "android_client_info": {
+          "package_name": "com.example.fix_my_area"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD09mYEpHavbNBuD20YZSilcfvVEUHppRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
