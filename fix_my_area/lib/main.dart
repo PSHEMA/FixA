@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/screens/login_screen.dart';
-import 'package:fix_my_area/theme/app_theme.dart';
-
-// Import Firebase Core and the generated options file
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:fix_my_area/auth_gate.dart';
+import 'package:fix_my_area/theme/app_theme.dart';
 
-// Make the main function async to await Firebase initialization
+// The main function must be async to wait for Firebase to initialize.
 Future<void> main() async {
-  // Ensure that Flutter bindings are initialized
+  // These two lines are the crucial setup for Firebase.
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Now we can run the app.
   runApp(const FixMyAreaApp());
 }
 
-// This widget is the root of your application.
 class FixMyAreaApp extends StatelessWidget {
   const FixMyAreaApp({super.key});
 
@@ -26,7 +23,9 @@ class FixMyAreaApp extends StatelessWidget {
     return MaterialApp(
       title: 'FixMyArea',
       theme: AppTheme.theme,
-      home: const LoginScreen(),
+      // And this is the second critical fix: using AuthGate as the home.
+      // AuthGate will now correctly manage showing the LoginScreen or HomeScreen.
+      home: const AuthGate(),
       debugShowCheckedModeBanner: false,
     );
   }

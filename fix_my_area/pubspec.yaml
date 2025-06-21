@@ -1,20 +1,22 @@
 name: fix_my_area
 description: "A new Flutter project."
-publish_to: 'none' 
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.1 <4.0.0'
+  sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  
+
   google_fonts: ^6.2.1
 
   firebase_core: ^2.32.0
   firebase_auth: ^4.20.0
+
+  cloud_firestore: ^4.17.5
 
   cupertino_icons: ^1.0.6
 
@@ -26,4 +28,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-

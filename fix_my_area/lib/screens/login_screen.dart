@@ -1,5 +1,6 @@
+import 'package:fix_my_area/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/screens/signup_screen.dart'; // Import the sign-up screen
+import 'package:fix_my_area/screens/signup_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +13,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
   bool _obscureText = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -22,17 +25,28 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _togglePasswordVisibility() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
+    setState(() => _obscureText = !_obscureText);
   }
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Implement login logic with Firebase Auth
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
-      // For now, we'll just print. Later we navigate to home screen.
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _authService.signInWithEmailAndPassword(
+        _emailController.text,
+        _passwordController.text,
+      );
+      // AuthGate will handle navigation on success
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to log in: ${e.toString()}')),
+      );
+    } finally {
+       if (mounted) {
+         setState(() => _isLoading = false);
+       }
     }
   }
 
@@ -49,38 +63,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  // App Title
-                  Text(
-                    'Welcome Back!',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                   const SizedBox(height: 8),
-                  Text(
-                    'Log in to your FixMyArea account',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
+                  Text('Welcome Back!', style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
+                  const SizedBox(height: 8),
+                  Text('Log in to your FixMyArea account', style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
                   const SizedBox(height: 48),
 
-                  // Email Text Field
                   TextFormField(
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: Icon(Icons.email_outlined),
-                    ),
+                    decoration: const InputDecoration(labelText: 'Email', prefixIcon: Icon(Icons.email_outlined)),
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty || !value.contains('@')) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
+                    validator: (v) => (v == null || !v.contains('@')) ? 'Please enter a valid email' : null,
                   ),
                   const SizedBox(height: 20),
 
-                  // Password Text Field
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscureText,
@@ -88,46 +83,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       labelText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText ? Icons.visibility_off : Icons.visibility,
-                        ),
+                        icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
                         onPressed: _togglePasswordVisibility,
                       ),
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
+                    validator: (v) => (v == null || v.isEmpty) ? 'Please enter your password' : null,
                   ),
                   const SizedBox(height: 32),
 
-                  // Login Button
-                  ElevatedButton(
-                    onPressed: _login,
-                    child: const Text('LOG IN'),
-                  ),
+                  _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ElevatedButton(onPressed: _login, child: const Text('LOG IN')),
                   const SizedBox(height: 24),
 
-                  // Sign Up Navigation
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text("Don't have an account?"),
                       TextButton(
-                        onPressed: () {
-                          // Navigate to Sign Up Screen
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => const SignUpScreen()),
-                          );
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary),
-                        ),
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SignUpScreen())),
+                        child: Text('Sign Up', style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.primary)),
                       ),
                     ],
                   ),
