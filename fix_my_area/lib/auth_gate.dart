@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/screens/home_screen.dart';
+import 'package:fix_my_area/models/user_model.dart';
+import 'package:fix_my_area/screens/customer/main_scaffold_customer.dart';
+import 'package:fix_my_area/screens/provider/main_scaffold_provider.dart';
 import 'package:fix_my_area/screens/login_screen.dart';
 import 'package:fix_my_area/services/auth_service.dart';
 
@@ -9,24 +11,42 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // StreamBuilder listens to the authentication state
+    final AuthService authService = AuthService();
+
     return StreamBuilder<User?>(
-      stream: AuthService().authStateChanges,
+      stream: authService.authStateChanges,
       builder: (context, snapshot) {
-        // If the snapshot is still waiting for data, show a loading spinner
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+        // User is not logged in
+        if (!snapshot.hasData) {
+          return const LoginScreen();
         }
 
-        // If the user is logged in (snapshot has data)
-        if (snapshot.hasData) {
-          return const HomeScreen();
-        }
+        // User is logged in, now check their role
+        return FutureBuilder<UserModel?>(
+          future: authService.getUserDetails(),
+          builder: (context, userSnapshot) {
+            // Waiting for user details
+            if (userSnapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            }
 
-        // If the user is not logged in (snapshot has no data)
-        return const LoginScreen();
+            // Error fetching details or no user data
+            if (userSnapshot.hasError || !userSnapshot.hasData) {
+              // You might want to log them out or show an error screen
+              return const LoginScreen();
+            }
+
+            final user = userSnapshot.data!;
+
+            // ROLE-BASED REDIRECTION
+            if (user.role == 'provider') {
+              return const MainScaffoldProvider();
+            } else {
+              return const MainScaffoldCustomer();
+            }
+          },
+        );
       },
     );
   }
 }
-
