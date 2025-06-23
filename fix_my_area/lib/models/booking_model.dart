@@ -1,19 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BookingModel {
-  final String? id;
+  final String id;
   final String customerId;
+  final String customerName;
   final String providerId;
+  final String providerName;
   final String service;
   final DateTime bookingTime;
   final String description;
-  final String status; // e.g., 'pending', 'confirmed', 'completed', 'cancelled'
+  final String status;
   final Timestamp createdAt;
 
   BookingModel({
-    this.id,
+    required this.id,
     required this.customerId,
+    required this.customerName,
     required this.providerId,
+    required this.providerName,
     required this.service,
     required this.bookingTime,
     required this.description,
@@ -21,16 +25,34 @@ class BookingModel {
     required this.createdAt,
   });
 
-  // Method to convert a BookingModel instance to a map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'customerId': customerId,
+      'customerName': customerName,
       'providerId': providerId,
+      'providerName': providerName,
       'service': service,
-      'bookingTime': bookingTime,
+      'bookingTime': Timestamp.fromDate(bookingTime),
       'description': description,
       'status': status,
       'createdAt': createdAt,
     };
+  }
+
+  // Create a BookingModel from a Firestore document
+  factory BookingModel.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return BookingModel(
+      id: doc.id,
+      customerId: data['customerId'] ?? '',
+      customerName: data['customerName'] ?? 'Unknown Customer',
+      providerId: data['providerId'] ?? '',
+      providerName: data['providerName'] ?? 'Unknown Provider',
+      service: data['service'] ?? 'Unknown Service',
+      bookingTime: (data['bookingTime'] as Timestamp).toDate(),
+      description: data['description'] ?? '',
+      status: data['status'] ?? 'unknown',
+      createdAt: data['createdAt'] ?? Timestamp.now(),
+    );
   }
 }

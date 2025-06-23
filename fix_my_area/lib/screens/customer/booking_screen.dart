@@ -64,51 +64,56 @@ class _BookingScreenState extends State<BookingScreen> {
   }
   
   Future<void> _submitBooking() async {
-    if (!_formKey.currentState!.validate() || _selectedDate == null || _selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields and select a date/time.')),
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    final currentUser = _authService.currentUser;
-    if (currentUser == null) {
-      // Handle user not logged in case
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    final bookingDateTime = DateTime(
-      _selectedDate!.year, _selectedDate!.month, _selectedDate!.day,
-      _selectedTime!.hour, _selectedTime!.minute
+  if (!_formKey.currentState!.validate() || _selectedDate == null || _selectedTime == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill all fields and select a date/time.')),
     );
-
-    final newBooking = BookingModel(
-      customerId: currentUser.uid,
-      providerId: widget.provider.uid,
-      service: _selectedService!,
-      bookingTime: bookingDateTime,
-      description: _descriptionController.text,
-      status: 'pending',
-      createdAt: Timestamp.now(),
-    );
-
-    try {
-      await _bookingService.createBooking(newBooking);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Booking request sent successfully!')),
-      );
-      Navigator.of(context).pop(); // Go back to profile screen
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send booking: ${e.toString()}')),
-      );
-    } finally {
-      if(mounted) setState(() => _isLoading = false);
-    }
+    return;
   }
+
+  setState(() => _isLoading = true);
+
+  // Fetch current user details to get their name
+  final currentUser = await _authService.getUserDetails();
+  if (currentUser == null) {
+    setState(() => _isLoading = false);
+    return;
+  }
+
+  final bookingDateTime = DateTime(
+    _selectedDate!.year, _selectedDate!.month, _selectedDate!.day,
+    _selectedTime!.hour, _selectedTime!.minute
+  );
+
+  // We create a temporary booking model without an ID, as Firestore provides it.
+  final newBooking = BookingModel(
+    id: '', // Firestore will generate this
+    customerId: currentUser.uid,
+    customerName: currentUser.name, // Pass customer name
+    providerId: widget.provider.uid,
+    providerName: widget.provider.name, // Pass provider name
+    service: _selectedService!,
+    bookingTime: bookingDateTime,
+    description: _descriptionController.text,
+    status: 'pending',
+    createdAt: Timestamp.now(),
+  );
+
+  try {
+    await _bookingService.createBooking(newBooking);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Booking request sent successfully!')),
+    );
+    // Pop back two screens to the main scaffold
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to send booking: ${e.toString()}')),
+    );
+  } finally {
+    if(mounted) setState(() => _isLoading = false);
+  }
+}
 
   @override
   Widget build(BuildContext context) {

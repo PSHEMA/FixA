@@ -7,7 +7,7 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // ... (no changes to getUserDetails, signIn, or signOut)
+  // ... (no changes to other functions)
   User? get currentUser => _auth.currentUser;
   Stream<User?> get authStateChanges => _auth.authStateChanges();
   
@@ -44,9 +44,9 @@ class AuthService {
         'role': isServiceProvider ? 'provider' : 'customer',
         'createdAt': Timestamp.now(),
         'services': defaultServices,
-        'bio': defaultBio, // Add default bio
-        'rate': defaultRate, // Add default rate
-        'photoUrl': '', // Default empty photo URL
+        'bio': defaultBio,
+        'rate': defaultRate,
+        'photoUrl': '',
       });
       
       return userCredential;
@@ -77,6 +77,18 @@ class AuthService {
     } catch (e) {
       debugPrint("Error fetching providers: $e");
       return [];
+    }
+  }
+
+  // Updates the current user's profile data in Firestore.
+  Future<void> updateUserProfile(Map<String, dynamic> data) async {
+    final user = _auth.currentUser;
+    if (user == null) return;
+    try {
+      await _firestore.collection('users').doc(user.uid).update(data);
+    } catch (e) {
+      debugPrint("Error updating profile: $e");
+      rethrow;
     }
   }
 
