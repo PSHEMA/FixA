@@ -11,6 +11,7 @@ class BookingModel {
   final String description;
   final String status;
   final Timestamp createdAt;
+  final bool isReviewed; // New field
 
   BookingModel({
     required this.id,
@@ -23,6 +24,7 @@ class BookingModel {
     required this.description,
     required this.status,
     required this.createdAt,
+    required this.isReviewed, // Add to constructor
   });
 
   Map<String, dynamic> toMap() {
@@ -36,10 +38,10 @@ class BookingModel {
       'description': description,
       'status': status,
       'createdAt': createdAt,
+      'isReviewed': isReviewed, // Add to map
     };
   }
 
-  // Create a BookingModel from a Firestore document
   factory BookingModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return BookingModel(
@@ -53,6 +55,7 @@ class BookingModel {
       description: data['description'] ?? '',
       status: data['status'] ?? 'unknown',
       createdAt: data['createdAt'] ?? Timestamp.now(),
+      isReviewed: data['isReviewed'] ?? false, // Read from map
     );
   }
 }

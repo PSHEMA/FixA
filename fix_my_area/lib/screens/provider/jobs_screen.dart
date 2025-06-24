@@ -27,13 +27,9 @@ class _JobsScreenState extends State<JobsScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text('You have no incoming jobs.'));
                 }
-
                 final bookings = snapshot.data!;
                 return ListView.builder(
                   padding: const EdgeInsets.all(8.0),
@@ -41,9 +37,6 @@ class _JobsScreenState extends State<JobsScreen> {
                   itemBuilder: (context, index) {
                     final booking = bookings[index];
                     return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      elevation: 3,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -54,37 +47,7 @@ class _JobsScreenState extends State<JobsScreen> {
                             Text('Customer: ${booking.customerName}', style: const TextStyle(fontWeight: FontWeight.bold)),
                             Text('Date: ${DateFormat.yMMMd().add_jm().format(booking.bookingTime)}'),
                             const SizedBox(height: 8),
-                            if (booking.description.isNotEmpty) ...[
-                              Text('Details: ${booking.description}', style: const TextStyle(fontStyle: FontStyle.italic)),
-                              const SizedBox(height: 8),
-                            ],
-                            // Show buttons only if the job is pending
-                            if (booking.status == 'pending')
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => _bookingService.updateBookingStatus(booking.id, 'cancelled'),
-                                    child: const Text('Decline', style: TextStyle(color: Colors.red)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  ElevatedButton(
-                                    onPressed: () => _bookingService.updateBookingStatus(booking.id, 'confirmed'),
-                                    child: const Text('Accept'),
-                                  ),
-                                ],
-                              )
-                            else 
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Chip(
-                                  label: Text(
-                                    booking.status.toUpperCase(),
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: _getStatusColor(booking.status),
-                                ),
-                              ),
+                            _buildActionButtons(booking), // Use a helper for buttons
                           ],
                         ),
                       ),
@@ -95,6 +58,44 @@ class _JobsScreenState extends State<JobsScreen> {
             ),
     );
   }
+  
+  Widget _buildActionButtons(BookingModel booking) {
+    switch (booking.status) {
+      case 'pending':
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () => _bookingService.updateBookingStatus(booking.id, 'cancelled'),
+              child: const Text('Decline', style: TextStyle(color: Colors.red)),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => _bookingService.updateBookingStatus(booking.id, 'confirmed'),
+              child: const Text('Accept'),
+            ),
+          ],
+        );
+      case 'confirmed':
+        return Align(
+          alignment: Alignment.centerRight,
+          child: ElevatedButton(
+            onPressed: () => _bookingService.updateBookingStatus(booking.id, 'completed'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Mark as Completed'),
+          ),
+        );
+      default:
+        return Align(
+          alignment: Alignment.centerRight,
+          child: Chip(
+            label: Text(booking.status.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            backgroundColor: _getStatusColor(booking.status),
+          ),
+        );
+    }
+  }
+
    Color _getStatusColor(String status) {
     switch (status) {
       case 'pending': return Colors.orange;

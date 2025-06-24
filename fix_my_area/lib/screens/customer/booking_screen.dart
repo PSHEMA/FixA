@@ -97,6 +97,7 @@ class _BookingScreenState extends State<BookingScreen> {
     description: _descriptionController.text,
     status: 'pending',
     createdAt: Timestamp.now(),
+    isReviewed: false, // Default to false
   );
 
   try {
