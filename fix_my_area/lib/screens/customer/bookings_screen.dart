@@ -56,6 +56,30 @@ class _BookingsScreenState extends State<BookingsScreen> {
                             const SizedBox(height: 8),
                             Text('With: ${booking.providerName}', style: const TextStyle(fontWeight: FontWeight.bold)),
                             Text(DateFormat.yMMMd().add_jm().format(booking.bookingTime)),
+                            if (booking.status == 'pending' || booking.status == 'confirmed')
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () async {
+                                    // Show a confirmation dialog
+                                    final bool? confirm = await showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text('Cancel Booking?'),
+                                        content: const Text('Are you sure you want to cancel this booking?'),
+                                        actions: [
+                                          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No')),
+                                          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Yes, Cancel')),
+                                        ],
+                                      ),
+                                    );
+                                    if (confirm == true) {
+                                      await BookingService().cancelBooking(booking.id);
+                                    }
+                                  },
+                                  child: const Text('Cancel Booking', style: TextStyle(color: Colors.red)),
+                                ),
+                              ),
                             const SizedBox(height: 8),
                             if(booking.status == 'completed' && !booking.isReviewed)
                               Center(

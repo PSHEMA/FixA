@@ -10,7 +10,6 @@ class UserModel {
   final String bio;
   final String rate;
   final String photoUrl;
-  final bool isVerified;
 
   UserModel({
     required this.uid,
@@ -22,7 +21,6 @@ class UserModel {
     required this.bio,
     required this.rate,
     required this.photoUrl,
-    required this.isVerified,
   });
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
@@ -37,7 +35,6 @@ class UserModel {
       bio: data['bio'] ?? 'No bio available.',
       rate: data['rate'] ?? 'Not specified',
       photoUrl: data['photoUrl'] ?? '',
-      isVerified: data['isVerified'] ?? false, // Read verification status
     );
   }
 }

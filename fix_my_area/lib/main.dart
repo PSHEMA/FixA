@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:fix_my_area/auth_gate.dart';
 import 'package:fix_my_area/theme/app_theme.dart';
+import 'package:fix_my_area/splash_screen.dart';
 
 // The main function must be async to wait for Firebase to initialize.
 Future<void> main() async {
@@ -23,9 +23,8 @@ class FixMyAreaApp extends StatelessWidget {
     return MaterialApp(
       title: 'FixMyArea',
       theme: AppTheme.theme,
-      // And this is the second critical fix: using AuthGate as the home.
-      // AuthGate will now correctly manage showing the LoginScreen or HomeScreen.
-      home: const AuthGate(),
+      // change the home property to point to our new SplashScreen
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

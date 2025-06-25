@@ -39,4 +39,14 @@ class ReviewService {
       return snapshot.docs.map((doc) => ReviewModel.fromFirestore(doc)).toList();
     });
   }
+
+  Stream<List<ReviewModel>> getReviewsForCustomer(String customerId) {
+    return _reviewsCollection
+        .where('customerId', isEqualTo: customerId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => ReviewModel.fromFirestore(doc)).toList();
+    });
+  }
 }

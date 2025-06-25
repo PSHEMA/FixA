@@ -48,4 +48,14 @@ class BookingService {
       rethrow;
     }
   }
+
+  Future<void> cancelBooking(String bookingId) async {
+    try {
+      // For simplicity, we delete the booking. You could also set a 'cancelled' status.
+      await _bookingsCollection.doc(bookingId).delete();
+    } catch (e) {
+      debugPrint("Error cancelling booking: $e");
+      rethrow;
+    }
+  }
 }

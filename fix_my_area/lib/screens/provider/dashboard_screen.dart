@@ -1,8 +1,10 @@
 import 'package:fix_my_area/models/user_model.dart';
 import 'package:fix_my_area/screens/provider/jobs_screen.dart';
+import 'package:fix_my_area/screens/provider/my_reviews_screen.dart';
 import 'package:fix_my_area/screens/provider/my_services_screen.dart';
 import 'package:fix_my_area/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:fix_my_area/screens/provider/manage_services_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -147,10 +149,7 @@ class DashboardScreen extends StatelessWidget {
                   subtitle: 'Manage the services you offer',
                   icon: Icons.construction_rounded,
                   color: const Color(0xFF5856D6),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => MyServicesScreen(provider: provider)),
-                  ),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ManageServicesScreen(currentServices: provider.services))),
                 ),
                 const SizedBox(height: 12),
                 _buildModernDashboardAction(
@@ -159,7 +158,7 @@ class DashboardScreen extends StatelessWidget {
                   subtitle: 'See what customers are saying',
                   icon: Icons.star_rounded,
                   color: const Color(0xFFFF9500),
-                  onTap: () {}, // TODO: Navigate to reviews screen
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MyReviewsScreen(providerId: provider.uid))),
                 ),
                 const SizedBox(height: 20),
               ],

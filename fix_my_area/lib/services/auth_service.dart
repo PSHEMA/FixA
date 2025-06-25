@@ -95,4 +95,16 @@ class AuthService {
   Future<void> signOut() async {
     await _auth.signOut();
   }
+  Future<List<UserModel>> getAllProviders() async {
+    try {
+      final snapshot = await _firestore
+          .collection('users')
+          .where('role', isEqualTo: 'provider')
+          .get();
+      return snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList();
+    } catch (e) {
+      debugPrint("Error fetching all providers: $e");
+      return [];
+    }
+  }
 }
