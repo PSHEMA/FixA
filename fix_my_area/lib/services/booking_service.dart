@@ -58,4 +58,16 @@ class BookingService {
       rethrow;
     }
   }
+
+  Future<void> completeBooking(String bookingId, double price) async {
+  try {
+    await _bookingsCollection.doc(bookingId).update({
+      'status': 'completed',
+      'price': price,
+    });
+  } catch (e) {
+    debugPrint("Error completing booking: $e");
+    rethrow;
+  }
+}
 }

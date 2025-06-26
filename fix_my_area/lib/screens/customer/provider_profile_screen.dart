@@ -1,3 +1,4 @@
+import 'package:fix_my_area/chat/chat_screen.dart';
 import 'package:fix_my_area/models/review_model.dart';
 import 'package:fix_my_area/models/user_model.dart';
 import 'package:fix_my_area/screens/customer/booking_screen.dart';
@@ -103,6 +104,18 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     style: const TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ],
+              ),
+              const SizedBox(height: 16),
+              TextButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // Pass the entire provider object now
+                    builder: (_) => ChatScreen(receiver: widget.provider),
+                  ),
+                ),
+                icon: const Icon(Icons.message_outlined),
+                label: const Text('Message Provider'),
               ),
             ],
           ),

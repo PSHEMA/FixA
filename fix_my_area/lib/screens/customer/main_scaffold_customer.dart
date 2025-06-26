@@ -2,6 +2,7 @@ import 'package:fix_my_area/screens/customer/bookings_screen.dart';
 import 'package:fix_my_area/screens/customer/home_screen.dart';
 import 'package:fix_my_area/screens/customer/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fix_my_area/screens/customer/messages_screen.dart'; 
 
 class MainScaffoldCustomer extends StatefulWidget {
   const MainScaffoldCustomer({super.key});
@@ -16,6 +17,7 @@ class _MainScaffoldCustomerState extends State<MainScaffoldCustomer> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     BookingsScreen(),
+    MessagesScreen(), 
     ProfileScreen(),
   ];
 
@@ -35,6 +37,7 @@ class _MainScaffoldCustomerState extends State<MainScaffoldCustomer> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.list_alt_outlined), activeIcon: Icon(Icons.list_alt), label: 'Bookings'),
+          BottomNavigationBarItem(icon: Icon(Icons.message_outlined), activeIcon: Icon(Icons.message), label: 'Messages'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,

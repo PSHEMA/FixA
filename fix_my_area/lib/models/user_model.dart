@@ -37,4 +37,6 @@ class UserModel {
       photoUrl: data['photoUrl'] ?? '',
     );
   }
+
+  get location => null;
 }

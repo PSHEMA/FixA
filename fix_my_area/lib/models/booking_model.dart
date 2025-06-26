@@ -11,6 +11,7 @@ class BookingModel {
   final String description;
   final String status;
   final Timestamp createdAt;
+  final double price;
   final bool isReviewed; // New field
 
   BookingModel({
@@ -24,6 +25,7 @@ class BookingModel {
     required this.description,
     required this.status,
     required this.createdAt,
+    required this.price,
     required this.isReviewed, // Add to constructor
   });
 
@@ -39,6 +41,7 @@ class BookingModel {
       'status': status,
       'createdAt': createdAt,
       'isReviewed': isReviewed, // Add to map
+      'price': price, // Add price to map
     };
   }
 
@@ -56,6 +59,7 @@ class BookingModel {
       status: data['status'] ?? 'unknown',
       createdAt: data['createdAt'] ?? Timestamp.now(),
       isReviewed: data['isReviewed'] ?? false, // Read from map
+      price: (data['price'] ?? 0.0).toDouble(), // Read price from map
     );
   }
 }

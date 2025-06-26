@@ -3,6 +3,8 @@ import 'package:fix_my_area/services/auth_service.dart';
 import 'package:fix_my_area/services/booking_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:fix_my_area/chat/chat_screen.dart';
+import 'package:fix_my_area/models/user_model.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({super.key});
@@ -46,6 +48,19 @@ class _JobsScreenState extends State<JobsScreen> {
                             const SizedBox(height: 8),
                             Text('Customer: ${booking.customerName}', style: const TextStyle(fontWeight: FontWeight.bold)),
                             Text('Date: ${DateFormat.yMMMd().add_jm().format(booking.bookingTime)}'),
+                            TextButton.icon(
+                              style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                              onPressed: () {
+                                final tempReceiver = UserModel(
+                                    uid: booking.customerId,
+                                    name: booking.customerName,
+                                    email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: ''
+                                  );
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(receiver: tempReceiver)));
+                              },
+                              icon: const Icon(Icons.message_outlined, size: 16),
+                              label: const Text('Message Customer'),
+                            ),
                             const SizedBox(height: 8),
                             _buildActionButtons(booking), // Use a helper for buttons
                           ],
@@ -77,14 +92,20 @@ class _JobsScreenState extends State<JobsScreen> {
           ],
         );
       case 'confirmed':
-        return Align(
-          alignment: Alignment.centerRight,
-          child: ElevatedButton(
-            onPressed: () => _bookingService.updateBookingStatus(booking.id, 'completed'),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('Mark as Completed'),
-          ),
-        );
+      return Align(
+        alignment: Alignment.centerRight,
+        child: ElevatedButton(
+          onPressed: () async {
+            // Show dialog to enter final price
+            final price = await _showPriceDialog();
+            if (price != null) {
+              await _bookingService.completeBooking(booking.id, price);
+            }
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+          child: const Text('Mark as Completed'),
+        ),
+      );
       default:
         return Align(
           alignment: Alignment.centerRight,
@@ -95,6 +116,25 @@ class _JobsScreenState extends State<JobsScreen> {
         );
     }
   }
+
+  Future<double?> _showPriceDialog() {
+  final controller = TextEditingController();
+  return showDialog<double>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Enter Final Price'),
+      content: TextField(
+        controller: controller,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: const InputDecoration(prefixText: 'RWF '),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+        TextButton(onPressed: () => Navigator.of(context).pop(double.tryParse(controller.text)), child: const Text('Confirm')),
+      ],
+    ),
+  );
+}
 
    Color _getStatusColor(String status) {
     switch (status) {

@@ -2,6 +2,7 @@ import 'package:fix_my_area/screens/provider/dashboard_screen.dart';
 import 'package:fix_my_area/screens/provider/jobs_screen.dart';
 import 'package:fix_my_area/screens/provider/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:fix_my_area/screens/provider/messages_screen.dart';
 
 class MainScaffoldProvider extends StatefulWidget {
   const MainScaffoldProvider({super.key});
@@ -17,6 +18,7 @@ class _MainScaffoldProviderState extends State<MainScaffoldProvider> {
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
     JobsScreen(),
+    MessagesScreen(), // Placeholder for messages screen
     ProfileScreen(),
   ];
 
@@ -36,6 +38,7 @@ class _MainScaffoldProviderState extends State<MainScaffoldProvider> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), activeIcon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.work_outline), activeIcon: Icon(Icons.work), label: 'Jobs'),
+          BottomNavigationBarItem(icon: Icon(Icons.message_outlined), activeIcon: Icon(Icons.message), label: 'Messages'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,

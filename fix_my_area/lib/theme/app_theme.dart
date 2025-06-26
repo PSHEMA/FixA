@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Define your core colors
-  static const Color primaryColor = Color(0xFFE53935); // A strong, bright red
-  static const Color accentColor = Color(0xFFFFFFFF); // White for text and accents
-  static const Color backgroundColor = Color(0xFFFAFAFA); // A very light grey for backgrounds
-  static const Color textColor = Color(0xFF333333); // Dark grey for primary text
+  // Define your core colors - OM Theme
+  static const Color primaryColor = Color(0xFF00B4D8); // OM Sky Blue
+  static const Color accentColor = Color(0xFFFFFFFF); // White
+  static const Color backgroundColor = Color(0xFFF8FCFF); // Very light blue tint
+  static const Color textColor = Color(0xFF1A365D); // Deep blue-grey for text
+  static const Color secondaryBlue = Color(0xFF0077B6); // Darker blue for variety
 
   // Method to get the application's theme data
   static ThemeData get theme {
@@ -18,7 +19,7 @@ class AppTheme {
         seedColor: primaryColor,
         primary: primaryColor,
         onPrimary: accentColor, // Text on primary color
-        secondary: accentColor,
+        secondary: secondaryBlue,
         surface: backgroundColor,
         onSurface: textColor,
       ),
@@ -71,7 +72,7 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.grey),
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -83,7 +84,22 @@ class AppTheme {
         ),
         labelStyle: GoogleFonts.lato(color: textColor),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: accentColor,
+      ),
+
+      // FloatingActionButton Theme
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: primaryColor,
+        foregroundColor: accentColor,
+      ),
+
+      // Card Theme
+      cardTheme: CardTheme(
+        color: accentColor,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }

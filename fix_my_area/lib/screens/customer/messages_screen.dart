@@ -1,0 +1,58 @@
+import 'package:fix_my_area/chat/chat_screen.dart';
+import 'package:fix_my_area/models/chat_room_model.dart';
+import 'package:fix_my_area/models/user_model.dart';
+import 'package:fix_my_area/services/auth_service.dart';
+import 'package:fix_my_area/services/chat_service.dart';
+import 'package:flutter/material.dart';
+
+class MessagesScreen extends StatelessWidget {
+  const MessagesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final ChatService chatService = ChatService();
+    final AuthService authService = AuthService();
+    final String currentUserId = authService.currentUser!.uid;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('My Messages')),
+      body: StreamBuilder<List<ChatRoomModel>>(
+        stream: chatService.getChatRooms(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) return const Center(child: Text('Something went wrong.'));
+          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
+          if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('You have no messages yet.'));
+          
+          final chatRooms = snapshot.data!;
+          return ListView.builder(
+            itemCount: chatRooms.length,
+            itemBuilder: (context, index) {
+              final room = chatRooms[index];
+              final otherUserId = room.participantIds.firstWhere((id) => id != currentUserId);
+              final otherUserName = room.participantNames[otherUserId] ?? 'Unknown User';
+
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: ListTile(
+                  leading: const CircleAvatar(child: Icon(Icons.person)),
+                  title: Text(otherUserName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(room.lastMessage, overflow: TextOverflow.ellipsis),
+                  onTap: () {
+                    // We need to create a temporary UserModel to pass to the chat screen
+                    // In a real app, you might fetch this user's full details
+                    final tempReceiver = UserModel(
+                      uid: otherUserId,
+                      name: otherUserName,
+                      email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: ''
+                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(receiver: tempReceiver)));
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
