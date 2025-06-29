@@ -82,7 +82,6 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeOutQuart,
     ));
 
-    // Background animation
     _backgroundAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -91,7 +90,6 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeInOut,
     ));
 
-    // Pulse animation for loading indicator
     _pulseAnimation = Tween<double>(
       begin: 0.8,
       end: 1.2,
@@ -100,13 +98,11 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeInOut,
     ));
 
-    // Start animations sequence
     _startAnimationSequence();
     
     // Navigate after delay
     Timer(const Duration(milliseconds: 2500), () {
       Navigator.of(context).pushReplacement(
-        // Navigate to the router, not the AuthGate directly
         MaterialPageRoute(builder: (context) => const OnboardingRouter()),
       );
     });
@@ -159,7 +155,6 @@ class _SplashScreenState extends State<SplashScreen>
             ),
             child: Stack(
               children: [
-                // Animated background elements
                 ...List.generate(6, (index) {
                   return Positioned(
                     top: (index * 150.0) - (_backgroundAnimation.value * 100),
@@ -187,7 +182,6 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Animated logo
                       AnimatedBuilder(
                         animation: _logoController,
                         builder: (context, child) {
@@ -225,7 +219,6 @@ class _SplashScreenState extends State<SplashScreen>
                       
                       const SizedBox(height: 30),
                       
-                      // Animated text
                       AnimatedBuilder(
                         animation: _textController,
                         builder: (context, child) {
@@ -267,7 +260,6 @@ class _SplashScreenState extends State<SplashScreen>
                       
                       const SizedBox(height: 60),
                       
-                      // Animated loading indicator
                       AnimatedBuilder(
                         animation: _pulseAnimation,
                         builder: (context, child) {

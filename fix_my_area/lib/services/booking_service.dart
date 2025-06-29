@@ -3,16 +3,25 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fix_my_area/models/booking_model.dart';
+import 'package:fix_my_area/services/notification_service.dart';
 import 'package:flutter/foundation.dart';
 
 class BookingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _bookingsCollection = FirebaseFirestore.instance.collection('bookings');
+  final NotificationService _notificationService = NotificationService();
 
   // Create a new booking
   Future<void> createBooking(BookingModel booking) async {
     try {
       await _bookingsCollection.add(booking.toMap());
+      await _notificationService.createNotification(
+        userId: booking.providerId,
+        title: 'New Job Request!',
+        body: '${booking.customerName} has requested your ${booking.service} service.',
+        type: 'booking',
+        referenceId: booking.id,
+      );
     } catch (e) {
       debugPrint("Error creating booking: $e");
       rethrow;
@@ -45,6 +54,14 @@ class BookingService {
   Future<void> updateBookingStatus(String bookingId, String status) async {
     try {
       await _bookingsCollection.doc(bookingId).update({'status': status});
+      if (status == 'confirmed') {
+        final bookingDoc = await _bookingsCollection.doc(bookingId).get();
+        await _notificationService.createNotification(
+          userId: bookingDoc['customerId'],
+          title: 'Booking Confirmed!',
+          body: '${bookingDoc['providerName']} has confirmed your booking.',
+        );
+      }
     } catch (e) {
       debugPrint("Error updating booking status: $e");
       rethrow;
@@ -53,7 +70,6 @@ class BookingService {
 
   Future<void> cancelBooking(String bookingId) async {
     try {
-      // For simplicity, we delete the booking. You could also set a 'cancelled' status.
       await _bookingsCollection.doc(bookingId).delete();
     } catch (e) {
       debugPrint("Error cancelling booking: $e");
@@ -62,16 +78,16 @@ class BookingService {
   }
 
   Future<void> completeBooking(String bookingId, double price) async {
-  try {
-    await _bookingsCollection.doc(bookingId).update({
-      'status': 'completed',
-      'price': price,
-    });
-  } catch (e) {
-    debugPrint("Error completing booking: $e");
-    rethrow;
+    try {
+      await _bookingsCollection.doc(bookingId).update({
+        'status': 'completed',
+        'price': price,
+      });
+    } catch (e) {
+      debugPrint("Error completing booking: $e");
+      rethrow;
+    }
   }
-}
 
   updateBookingTime(String id, DateTime newDateTime) {}
 }

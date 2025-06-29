@@ -12,7 +12,7 @@ class BookingModel {
   final String status;
   final Timestamp createdAt;
   final double price;
-  final bool isReviewed; // New field
+  final bool isReviewed;
 
   BookingModel({
     required this.id,
@@ -26,7 +26,7 @@ class BookingModel {
     required this.status,
     required this.createdAt,
     required this.price,
-    required this.isReviewed, // Add to constructor
+    required this.isReviewed,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,8 +40,8 @@ class BookingModel {
       'description': description,
       'status': status,
       'createdAt': createdAt,
-      'isReviewed': isReviewed, // Add to map
-      'price': price, // Add price to map
+      'isReviewed': isReviewed,
+      'price': price, 
     };
   }
 
@@ -58,8 +58,8 @@ class BookingModel {
       description: data['description'] ?? '',
       status: data['status'] ?? 'unknown',
       createdAt: data['createdAt'] ?? Timestamp.now(),
-      isReviewed: data['isReviewed'] ?? false, // Read from map
-      price: (data['price'] ?? 0.0).toDouble(), // Read price from map
+      isReviewed: data['isReviewed'] ?? false,
+      price: (data['price'] ?? 0.0).toDouble(),
     );
   }
 }

@@ -1,7 +1,11 @@
+import 'package:fix_my_area/models/notification_model.dart';
 import 'package:fix_my_area/screens/customer/bookings_screen.dart';
 import 'package:fix_my_area/screens/customer/home_screen.dart';
 import 'package:fix_my_area/screens/customer/messages_screen.dart';
 import 'package:fix_my_area/screens/customer/profile_screen.dart';
+import 'package:fix_my_area/screens/notifications/notifications_screen.dart';
+import 'package:fix_my_area/services/auth_service.dart';
+import 'package:fix_my_area/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
 class MainScaffoldCustomer extends StatefulWidget {
@@ -27,8 +31,38 @@ class _MainScaffoldCustomerState extends State<MainScaffoldCustomer> {
 
   @override
   Widget build(BuildContext context) {
+    final String? userId = AuthService().currentUser?.uid;
+    final NotificationService notificationService = NotificationService();
+    final List<String> appBarTitles = ['FixMyArea', 'My Bookings', 'Messages', 'My Profile'];
+
     return Scaffold(
-      // THE FIX: Removing the unnecessary Center widget solves the layout bug.
+      appBar: AppBar(
+        title: Text(appBarTitles[_selectedIndex]),
+        automaticallyImplyLeading: false,
+        elevation: _selectedIndex == 0 ? 0 : 4,
+        backgroundColor: _selectedIndex == 0 ? Theme.of(context).scaffoldBackgroundColor : Theme.of(context).appBarTheme.backgroundColor,
+        actions: [
+          StreamBuilder<List<NotificationModel>>(
+            stream: userId != null ? notificationService.getNotifications(userId) : null,
+            builder: (context, snapshot) {
+              final unreadCount = snapshot.data?.where((n) => !n.isRead).length ?? 0;
+              return IconButton(
+                icon: Badge(
+                  label: Text('$unreadCount'),
+                  isLabelVisible: unreadCount > 0,
+                  child: const Icon(Icons.notifications_outlined),
+                ),
+                onPressed: () {
+                  if (userId != null) {
+                    notificationService.markAllAsRead(userId);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                  }
+                },
+              );
+            },
+          ),
+        ],
+      ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -39,8 +73,8 @@ class _MainScaffoldCustomerState extends State<MainScaffoldCustomer> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Colors.grey, // Add this for better contrast
-        type: BottomNavigationBarType.fixed, // Ensures all labels are visible
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
     );

@@ -34,12 +34,10 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
       body: FutureBuilder<List<UserModel>>(
         future: _providersFuture,
         builder: (context, snapshot) {
-          // 1. While waiting for data, show a loading spinner.
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // 2. THE FIX: If there's an error, display it instead of a blank screen.
           if (snapshot.hasError) {
             return Center(
               child: Padding(
@@ -49,12 +47,10 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
             );
           }
 
-          // 3. If there's no data, show a clear message.
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No providers found for this category yet.'));
           }
           
-          // 4. If everything is successful, show the list.
           final providers = snapshot.data!;
           return ListView.builder(
             padding: const EdgeInsets.all(8.0),

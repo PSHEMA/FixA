@@ -21,7 +21,7 @@ class MyReviewsScreen extends StatelessWidget {
           : StreamBuilder<List<ReviewModel>>(
               stream: ReviewService().getReviewsForCustomer(customerId),
               builder: (context, snapshot) {
-                // Add debug information
+                // debug information
                 print('Stream state: ${snapshot.connectionState}');
                 print('Has data: ${snapshot.hasData}');
                 print('Data length: ${snapshot.data?.length ?? 0}');
@@ -45,7 +45,6 @@ class MyReviewsScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: () {
-                            // Force rebuild to retry
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (_) => const MyReviewsScreen()),
@@ -58,7 +57,6 @@ class MyReviewsScreen extends StatelessWidget {
                   );
                 }
 
-                // More specific data checking
                 final reviews = snapshot.data;
                 if (reviews == null || reviews.isEmpty) {
                   return const Center(

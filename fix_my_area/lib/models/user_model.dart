@@ -9,7 +9,7 @@ class UserModel {
   final List<String> services;
   final String bio;
   final String rate;
-  String photoUrl; // Make this non-final so we can update it
+  String photoUrl;
   final String district;
   final String sector;
 

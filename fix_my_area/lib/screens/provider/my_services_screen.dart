@@ -15,7 +15,6 @@ class MyServicesScreen extends StatelessWidget {
             icon: const Icon(Icons.add),
             tooltip: 'Add Service',
             onPressed: () {
-              // TODO: Implement dialog or new screen to add/edit services
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Add/Edit feature coming soon!'))
               );

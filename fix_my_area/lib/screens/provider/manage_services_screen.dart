@@ -10,10 +10,9 @@ class ManageServicesScreen extends StatefulWidget {
 }
 
 class _ManageServicesScreenState extends State<ManageServicesScreen> {
-  // This would typically come from your database, but for now, it's a master list.
   final List<String> _allPossibleServices = [
     'Plumbing', 'Electrical', 'Cleaning', 'Tutoring', 'Painting', 
-    'Moving', 'Gardening', 'Appliance Repair', 'Carpentry', 'Landscaping'
+    'Moving',
   ];
 
   late Set<String> _selectedServices;

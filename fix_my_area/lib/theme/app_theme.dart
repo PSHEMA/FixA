@@ -19,7 +19,7 @@ class AppTheme {
       colorScheme: ColorScheme.fromSeed(
         seedColor: primaryColor,
         primary: primaryColor,
-        onPrimary: accentColor, // Text on primary color
+        onPrimary: accentColor,
         secondary: secondaryGold,
         surface: backgroundColor,
         onSurface: textColor,

@@ -15,7 +15,6 @@ class MessagesScreen extends StatelessWidget {
     final String currentUserId = authService.currentUser!.uid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Messages')),
       body: StreamBuilder<List<ChatRoomModel>>(
         stream: chatService.getChatRooms(),
         builder: (context, snapshot) {
@@ -57,8 +56,6 @@ class MessagesScreen extends StatelessWidget {
                   title: Text(otherUserName, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(room.lastMessage, overflow: TextOverflow.ellipsis),
                   onTap: () {
-                    // We need to create a temporary UserModel to pass to the chat screen
-                    // In a real app, you might fetch this user's full details
                     final tempReceiver = UserModel(
                       uid: otherUserId,
                       name: otherUserName,

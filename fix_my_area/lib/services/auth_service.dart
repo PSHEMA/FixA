@@ -7,7 +7,6 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // ... (no changes to other functions)
   User? get currentUser => _auth.currentUser;
   Stream<User?> get authStateChanges => _auth.authStateChanges();
   
@@ -32,7 +31,6 @@ class AuthService {
         password: password,
       );
       
-      // Default data is now much simpler. Services and location are added later.
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'name': name,
@@ -40,11 +38,11 @@ class AuthService {
         'phone': phone,
         'role': isServiceProvider ? 'provider' : 'customer',
         'createdAt': Timestamp.now(),
-        'services': [], // Starts empty
+        'services': [],
         'bio': '',
         'rate': '',
         'photoUrl': '',
-        'location': null, // Starts empty
+        'location': null,
       });
       
       return userCredential;
@@ -78,7 +76,6 @@ class AuthService {
     }
   }
 
-  // Updates the current user's profile data in Firestore.
   Future<void> updateUserProfile(Map<String, dynamic> data) async {
     final user = _auth.currentUser;
     if (user == null) return;

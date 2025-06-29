@@ -17,23 +17,18 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: authService.authStateChanges,
       builder: (context, snapshot) {
-        // User is not logged in
         if (!snapshot.hasData) {
           return const LoginScreen();
         }
 
-        // User is logged in, now check their role
         return FutureBuilder<UserModel?>(
           future: authService.getUserDetails(),
           builder: (context, userSnapshot) {
-            // Waiting for user details
             if (userSnapshot.connectionState == ConnectionState.waiting) {
               return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
 
-            // Error fetching details or no user data
             if (userSnapshot.hasError || !userSnapshot.hasData) {
-              // You might want to log them out or show an error screen
               return const LoginScreen();
             }
 
@@ -41,7 +36,6 @@ class AuthGate extends StatelessWidget {
 
             // ROLE-BASED REDIRECTION
             if (user.role == 'provider') {
-              // If provider hasn't set services yet, send them to onboarding
               if (user.services.isEmpty) {
                 return const OnboardingServicesScreen();
               }

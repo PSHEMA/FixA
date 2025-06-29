@@ -19,7 +19,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Bookings')),
       body: _currentUserId == null
           ? const Center(child: Text('Please log in to see your bookings.'))
           : StreamBuilder<List<BookingModel>>(

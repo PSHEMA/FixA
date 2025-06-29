@@ -17,7 +17,7 @@ class _OnboardingLocationScreenState extends State<OnboardingLocationScreen> {
   void _onDistrictChanged(String? newValue) {
     setState(() {
       _selectedDistrict = newValue;
-      _selectedSector = null; // Reset sector when district changes
+      _selectedSector = null;
       _sectors = kigaliLocations[newValue!]!;
     });
   }

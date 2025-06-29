@@ -20,7 +20,6 @@ class _JobsScreenState extends State<JobsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Jobs')),
       body: _currentUserId == null
           ? const Center(child: Text('Could not find provider information.'))
           : StreamBuilder<List<BookingModel>>(
@@ -62,7 +61,7 @@ class _JobsScreenState extends State<JobsScreen> {
                               label: const Text('Message Customer'),
                             ),
                             const SizedBox(height: 8),
-                            _buildActionButtons(booking), // Use a helper for buttons
+                            _buildActionButtons(booking),
                           ],
                         ),
                       ),
@@ -96,7 +95,6 @@ class _JobsScreenState extends State<JobsScreen> {
         alignment: Alignment.centerRight,
         child: ElevatedButton(
           onPressed: () async {
-            // Show dialog to enter final price
             final price = await _showPriceDialog();
             if (price != null) {
               await _bookingService.completeBooking(booking.id, price);

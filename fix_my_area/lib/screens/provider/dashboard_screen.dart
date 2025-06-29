@@ -17,9 +17,6 @@ class DashboardScreen extends StatelessWidget {
     final BookingService bookingService = BookingService();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Dashboard'),
-      ),
       body: FutureBuilder<UserModel?>(
         future: authService.getUserDetails(),
         builder: (context, userSnapshot) {
@@ -60,14 +57,14 @@ class DashboardScreen extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(24.0),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: const Color(0xFFFFFFFF),
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(20),
                           bottomRight: Radius.circular(20),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF00B4D8).withOpacity(0.1),
+                            color: const Color(0xFF1B5E20).withOpacity(0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 2),
                           ),
@@ -79,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
                           Text(
                             'Welcome back,',
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: const Color(0xFF1A365D).withOpacity(0.7),
+                              color: const Color(0xFF1B1B1B).withOpacity(0.7),
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -88,14 +85,14 @@ class DashboardScreen extends StatelessWidget {
                             provider.name,
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1A365D),
+                              color: const Color(0xFF1B1B1B),
                             ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Here\'s what\'s happening with your business today',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFF1A365D).withOpacity(0.7),
+                              color: const Color(0xFF1B1B1B).withOpacity(0.7),
                             ),
                           ),
                         ],
@@ -104,7 +101,6 @@ class DashboardScreen extends StatelessWidget {
 
                     const SizedBox(height: 24),
 
-                    // Stats Cards
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Row(
@@ -114,7 +110,7 @@ class DashboardScreen extends StatelessWidget {
                               'Jobs Today',
                               jobsToday.toString(),
                               Icons.work_history_outlined,
-                              Colors.orange,
+                              const Color(0xFFFF8F00),
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -126,7 +122,7 @@ class DashboardScreen extends StatelessWidget {
                                 decimalDigits: 0,
                               ).format(totalEarnings),
                               Icons.attach_money_outlined,
-                              Colors.green,
+                              const Color(0xFF2E7D32),
                             ),
                           ),
                         ],
@@ -135,21 +131,19 @@ class DashboardScreen extends StatelessWidget {
 
                     const SizedBox(height: 32),
 
-                    // Quick Actions Section
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
                         'Quick Actions',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF1A365D),
+                          color: const Color(0xFF1B1B1B),
                         ),
                       ),
                     ),
 
                     const SizedBox(height: 16),
 
-                    // Action Cards
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
@@ -169,7 +163,7 @@ class DashboardScreen extends StatelessWidget {
                                 ? Badge(
                                     label: Text('$pendingJobs'),
                                     backgroundColor: Colors.red,
-                                    textColor: Colors.white,
+                                    textColor: const Color(0xFFFFFFFF),
                                   )
                                 : null,
                           ),
@@ -222,11 +216,11 @@ class DashboardScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF00B4D8).withOpacity(0.1),
+            color: const Color(0xFF1B5E20).withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -250,8 +244,8 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.grey,
+            style: TextStyle(
+              color: const Color(0xFF1B1B1B).withOpacity(0.7),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -262,7 +256,7 @@ class DashboardScreen extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A365D),
+              color: Color(0xFF1B1B1B),
             ),
           ),
         ],
@@ -280,11 +274,11 @@ class DashboardScreen extends StatelessWidget {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF00B4D8).withOpacity(0.1),
+            color: const Color(0xFF1B5E20).withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -302,13 +296,13 @@ class DashboardScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF00B4D8).withOpacity(0.1),
+                    color: const Color(0xFF1B5E20).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     icon,
                     size: 24,
-                    color: const Color(0xFF00B4D8),
+                    color: const Color(0xFF1B5E20),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -321,14 +315,14 @@ class DashboardScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          color: Color(0xFF1A365D),
+                          color: Color(0xFF1B1B1B),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         subtitle,
                         style: TextStyle(
-                          color: const Color(0xFF1A365D).withOpacity(0.7),
+                          color: const Color(0xFF1B1B1B).withOpacity(0.7),
                           fontSize: 14,
                         ),
                       ),
@@ -339,7 +333,7 @@ class DashboardScreen extends StatelessWidget {
                     Icon(
                       Icons.arrow_forward_ios,
                       size: 16,
-                      color: const Color(0xFF1A365D).withOpacity(0.5),
+                      color: const Color(0xFF1B1B1B).withOpacity(0.5),
                     ),
               ],
             ),

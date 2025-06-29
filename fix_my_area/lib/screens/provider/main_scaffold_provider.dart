@@ -1,8 +1,12 @@
+import 'package:fix_my_area/models/notification_model.dart';
+import 'package:fix_my_area/screens/notifications/notifications_screen.dart';
 import 'package:fix_my_area/screens/provider/dashboard_screen.dart';
 import 'package:fix_my_area/screens/provider/jobs_screen.dart';
-import 'package:fix_my_area/screens/provider/profile_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:fix_my_area/screens/provider/messages_screen.dart';
+import 'package:fix_my_area/screens/provider/profile_screen.dart';
+import 'package:fix_my_area/services/auth_service.dart';
+import 'package:fix_my_area/services/notification_service.dart';
+import 'package:flutter/material.dart';
 
 class MainScaffoldProvider extends StatefulWidget {
   const MainScaffoldProvider({super.key});
@@ -14,36 +18,63 @@ class MainScaffoldProvider extends StatefulWidget {
 class _MainScaffoldProviderState extends State<MainScaffoldProvider> {
   int _selectedIndex = 0;
 
-  // We'll add the "My Services" screen later
   static const List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
     JobsScreen(),
-    MessagesScreen(), // Placeholder for messages screen
+    MessagesScreen(),
     ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    setState(() { _selectedIndex = index; });
   }
 
   @override
   Widget build(BuildContext context) {
+    final String? userId = AuthService().currentUser?.uid;
+    final NotificationService notificationService = NotificationService();
+    final List<String> appBarTitles = ['Dashboard', 'My Jobs', 'Messages', 'My Profile'];
+
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      appBar: AppBar(
+        title: Text(appBarTitles[_selectedIndex]),
+        automaticallyImplyLeading: false,
+        actions: [
+          StreamBuilder<List<NotificationModel>>(
+            stream: userId != null ? notificationService.getNotifications(userId) : null,
+            builder: (context, snapshot) {
+              final unreadCount = snapshot.data?.where((n) => !n.isRead).length ?? 0;
+              return IconButton(
+                icon: Badge(
+                  label: Text('$unreadCount'),
+                  isLabelVisible: unreadCount > 0,
+                  child: const Icon(Icons.notifications_outlined),
+                ),
+                onPressed: () {
+                  if (userId != null) {
+                    notificationService.markAllAsRead(userId);
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationsScreen()));
+                  }
+                },
+              );
+            },
+          ),
+           if (_selectedIndex == 3)
+             IconButton(icon: Icon(Icons.logout), onPressed: () => AuthService().signOut()),
+        ],
       ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), activeIcon: Icon(Icons.dashboard), label: 'Dashboard'),
           BottomNavigationBarItem(icon: Icon(Icons.work_outline), activeIcon: Icon(Icons.work), label: 'Jobs'),
-          BottomNavigationBarItem(icon: Icon(Icons.message_outlined), activeIcon: Icon(Icons.message), label: 'Messages'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), activeIcon: Icon(Icons.chat_bubble), label: 'Messages'),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).primaryColor,
-        type: BottomNavigationBarType.fixed, // Good for 3+ items
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
     );

@@ -85,20 +85,19 @@ class _BookingScreenState extends State<BookingScreen> {
     _selectedTime!.hour, _selectedTime!.minute
   );
 
-  // We create a temporary booking model without an ID, as Firestore provides it.
   final newBooking = BookingModel(
-    id: '', // Firestore will generate this
+    id: '',
     customerId: currentUser.uid,
-    customerName: currentUser.name, // Pass customer name
+    customerName: currentUser.name,
     providerId: widget.provider.uid,
-    providerName: widget.provider.name, // Pass provider name
+    providerName: widget.provider.name,
     service: _selectedService!,
     bookingTime: bookingDateTime,
     description: _descriptionController.text,
     status: 'pending',
     createdAt: Timestamp.now(),
-    price: 0.0, // Provide a value for price
-    isReviewed: false, // Provide a value for isReviewed
+    price: 0.0,
+    isReviewed: false,
   );
 
   try {
@@ -106,7 +105,6 @@ class _BookingScreenState extends State<BookingScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Booking request sent successfully!')),
     );
-    // Pop back two screens to the main scaffold
     Navigator.of(context).popUntil((route) => route.isFirst);
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(

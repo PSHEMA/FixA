@@ -34,7 +34,7 @@ class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
     }
 
     final newReview = ReviewModel(
-      id: '', // Firestore will generate
+      id: '',
       providerId: widget.booking.providerId,
       customerId: currentUser.uid,
       customerName: currentUser.name,

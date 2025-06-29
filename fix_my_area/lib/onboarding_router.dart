@@ -32,11 +32,9 @@ class _OnboardingRouterState extends State<OnboardingRouter> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      // Show a loading spinner while we check shared preferences
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // Route based on whether it's the user's first time
     return _isFirstTime ? const OnboardingScreen() : const AuthGate();
   }
 }

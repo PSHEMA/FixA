@@ -71,7 +71,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildMessageInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 24), // Add padding for keyboard
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
       child: Row(
         children: [
           Expanded(
@@ -87,7 +87,6 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          // THE FIX IS HERE: The button is now properly included
           IconButton.filled(
             style: IconButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
             icon: const Icon(Icons.send, color: Colors.white),

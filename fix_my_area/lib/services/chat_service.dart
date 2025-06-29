@@ -3,10 +3,12 @@ import 'package:fix_my_area/models/chat_room_model.dart';
 import 'package:fix_my_area/models/message_model.dart';
 import 'package:fix_my_area/models/user_model.dart';
 import 'package:fix_my_area/services/auth_service.dart';
+import 'package:fix_my_area/services/notification_service.dart';
 
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
+  final NotificationService _notificationService = NotificationService();
 
   // Send a message
   Future<void> sendMessage(UserModel receiver, String message) async {
@@ -26,6 +28,14 @@ class ChatService {
 
     // Add new message to the messages subcollection
     await _firestore.collection('chat_rooms').doc(chatRoomId).collection('messages').add(newMessage.toMap());
+    
+    await _notificationService.createNotification(
+      userId: receiver.uid,
+      title: 'New Message from ${currentUser.name}',
+      body: message,
+      type: 'chat',
+      referenceId: chatRoomId,
+    );
 
     // Update the main chat room document with last message info
     await _firestore.collection('chat_rooms').doc(chatRoomId).set({

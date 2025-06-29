@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
     zoom: 12
   );
 
-  // State for search
   List<Map<String, dynamic>> _filteredCategories = [];
 
   final List<Map<String, dynamic>> _allServiceCategories = [
@@ -200,7 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Services Grid - Changed to 2 columns for better spacing
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -208,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 1.1, // Slightly wider than square
+                  childAspectRatio: 1.1,
                 ),
                 itemCount: _filteredCategories.length,
                 itemBuilder: (context, index) {
@@ -227,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 16),
               Container(
-                height: 300, // Fixed height instead of AspectRatio
+                height: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
@@ -258,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20), // Bottom padding
+              const SizedBox(height: 20),
             ],
           ),
         ),

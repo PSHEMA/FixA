@@ -25,7 +25,6 @@ class MyReviewsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             itemCount: reviews.length,
             itemBuilder: (context, index) {
-              // Reusing the same beautiful card from the customer side!
               return ReviewCard(review: reviews[index]);
             },
           );

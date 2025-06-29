@@ -176,7 +176,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           shape: BoxShape.circle,
                           gradient: widget.user.photoUrl.isNotEmpty 
                             ? null 
-                            : LinearGradient(
+                            : const LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
@@ -356,7 +356,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         width: 1,
                       ),
                     ),
-                    child: Center(
+                    child: const Center(
                       child: SizedBox(
                         width: 24,
                         height: 24,
