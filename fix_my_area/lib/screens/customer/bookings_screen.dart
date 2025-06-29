@@ -38,6 +38,12 @@ class _BookingsScreenState extends State<BookingsScreen> {
                   itemBuilder: (context, index) {
                     final booking = bookings[index];
                     return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12)
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
@@ -45,49 +51,64 @@ class _BookingsScreenState extends State<BookingsScreen> {
                           children: [
                              Row(
                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: [
-                                 Flexible(child: Text(booking.service, style: Theme.of(context).textTheme.titleLarge)),
+                                 Flexible(child: Text(booking.service, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold))),
                                  Chip(
-                                   label: Text(booking.status.toUpperCase(), style: const TextStyle(color: Colors.white)),
+                                   label: Text(booking.status, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                                    backgroundColor: _getStatusColor(booking.status),
+                                   padding: const EdgeInsets.symmetric(horizontal: 8),
                                  ),
                                ],
                              ),
-                            const SizedBox(height: 8),
-                            Text('With: ${booking.providerName}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            Text(DateFormat.yMMMd().add_jm().format(booking.bookingTime)),
-                            if (booking.status == 'pending' || booking.status == 'confirmed')
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () async {
-                                    // Show a confirmation dialog
-                                    final bool? confirm = await showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: const Text('Cancel Booking?'),
-                                        content: const Text('Are you sure you want to cancel this booking?'),
-                                        actions: [
-                                          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No')),
-                                          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Yes, Cancel')),
-                                        ],
-                                      ),
-                                    );
-                                    if (confirm == true) {
-                                      await BookingService().cancelBooking(booking.id);
-                                    }
-                                  },
-                                  child: const Text('Cancel Booking', style: TextStyle(color: Colors.red)),
-                                ),
-                              ),
-                            const SizedBox(height: 8),
-                            if(booking.status == 'completed' && !booking.isReviewed)
+                            const Divider(height: 20),
+                            Text('With: ${booking.providerName}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 4),
+                            Text(DateFormat.yMMMd().add_jm().format(booking.bookingTime), style: TextStyle(color: Colors.grey.shade700)),
+                            if (booking.status == 'completed' && !booking.isReviewed)
                               Center(
                                 child: TextButton(
                                   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => LeaveReviewScreen(booking: booking))),
                                   child: const Text('Leave a Review'),
                                 ),
-                              )
+                              ),
+                            if (booking.status == 'pending' || booking.status == 'confirmed')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      // Show a confirmation dialog
+                                      final bool? confirm = await showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text('Cancel Booking?'),
+                                          content: const Text('Are you sure you want to cancel this booking?'),
+                                          actions: [
+                                            TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No')),
+                                            TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Yes, Cancel')),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirm == true) {
+                                        await BookingService().cancelBooking(booking.id);
+                                      }
+                                    },
+                                    child: const Text('Cancel', style: TextStyle(color: Colors.red)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      // Show date/time picker to reschedule
+                                      final newDateTime = await _showRescheduleDialog(context, booking.bookingTime);
+                                      if (newDateTime != null) {
+                                        await BookingService().updateBookingTime(booking.id, newDateTime);
+                                      }
+                                    },
+                                    child: const Text('Reschedule'),
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                       ),
@@ -97,6 +118,25 @@ class _BookingsScreenState extends State<BookingsScreen> {
               },
             ),
     );
+  }
+
+  // Helper method for reschedule dialog
+  Future<DateTime?> _showRescheduleDialog(BuildContext context, DateTime initialDate) async {
+    final newDate = await showDatePicker(
+      context: context, 
+      initialDate: initialDate, 
+      firstDate: DateTime.now(), 
+      lastDate: DateTime.now().add(const Duration(days: 90))
+    );
+    if (newDate == null) return null;
+
+    final newTime = await showTimePicker(
+      context: context, 
+      initialTime: TimeOfDay.fromDateTime(initialDate)
+    );
+    if (newTime == null) return null;
+
+    return DateTime(newDate.year, newDate.month, newDate.day, newTime.hour, newTime.minute);
   }
 
   Color _getStatusColor(String status) {

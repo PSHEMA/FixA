@@ -17,35 +17,199 @@ class DashboardScreen extends StatelessWidget {
     final BookingService bookingService = BookingService();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('My Dashboard')),
+      appBar: AppBar(
+        title: const Text('My Dashboard'),
+      ),
       body: FutureBuilder<UserModel?>(
         future: authService.getUserDetails(),
         builder: (context, userSnapshot) {
-          if (!userSnapshot.hasData) return const Center(child: CircularProgressIndicator());
+          if (!userSnapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           final provider = userSnapshot.data!;
           
           return StreamBuilder<List<BookingModel>>(
             stream: bookingService.getBookingsForProvider(provider.uid),
             builder: (context, bookingSnapshot) {
-              if (!bookingSnapshot.hasData) return const Center(child: CircularProgressIndicator());
+              if (!bookingSnapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
               
               final bookings = bookingSnapshot.data!;
-              final double totalEarnings = bookings.where((b) => b.status == 'completed').fold(0, (sum, item) => sum + item.price);
-              final int jobsToday = bookings.where((b) => DateFormat.yMd().format(b.bookingTime) == DateFormat.yMd().format(DateTime.now())).length;
-              final int pendingJobs = bookings.where((b) => b.status == 'pending').length;
+              final double totalEarnings = bookings
+                  .where((b) => b.status == 'completed')
+                  .fold(0, (sum, item) => sum + item.price);
+              final int jobsToday = bookings
+                  .where((b) => DateFormat.yMd().format(b.bookingTime) == 
+                      DateFormat.yMd().format(DateTime.now()))
+                  .length;
+              final int pendingJobs = bookings
+                  .where((b) => b.status == 'pending')
+                  .length;
 
-              return ListView(
-                padding: const EdgeInsets.all(16.0),
-                children: [
-                  Text('Welcome back, ${provider.name}!', style: Theme.of(context).textTheme.headlineSmall),
-                  const SizedBox(height: 24),
-                  _buildStatCard('Jobs Today', jobsToday.toString(), Icons.work_history, Colors.orange),
-                  _buildStatCard('Total Earnings', '${NumberFormat.currency(symbol: 'RWF ', decimalDigits: 0).format(totalEarnings)}', Icons.attach_money, Colors.green),
-                  const SizedBox(height: 24),
-                  _buildDashboardAction(context, title: 'My Jobs', subtitle: 'View and manage job requests', icon: Icons.list_alt, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const JobsScreen())), trailing: pendingJobs > 0 ? Badge(label: Text('$pendingJobs')) : null),
-                  _buildDashboardAction(context, title: 'My Services', subtitle: 'Manage the services you offer', icon: Icons.construction, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ManageServicesScreen(currentServices: provider.services)))),
-                  _buildDashboardAction(context, title: 'My Reviews', subtitle: 'See what customers are saying', icon: Icons.star_border, onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => MyReviewsScreen(providerId: provider.uid)))),
-                ],
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Welcome Header
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(24.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF00B4D8).withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome back,',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: const Color(0xFF1A365D).withOpacity(0.7),
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            provider.name,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF1A365D),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Here\'s what\'s happening with your business today',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: const Color(0xFF1A365D).withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Stats Cards
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              'Jobs Today',
+                              jobsToday.toString(),
+                              Icons.work_history_outlined,
+                              Colors.orange,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildStatCard(
+                              'Total Earnings',
+                              NumberFormat.currency(
+                                symbol: 'RWF ',
+                                decimalDigits: 0,
+                              ).format(totalEarnings),
+                              Icons.attach_money_outlined,
+                              Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    // Quick Actions Section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        'Quick Actions',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF1A365D),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Action Cards
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        children: [
+                          _buildDashboardAction(
+                            context,
+                            title: 'My Jobs',
+                            subtitle: 'View and manage job requests',
+                            icon: Icons.list_alt_outlined,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const JobsScreen(),
+                              ),
+                            ),
+                            trailing: pendingJobs > 0
+                                ? Badge(
+                                    label: Text('$pendingJobs'),
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                  )
+                                : null,
+                          ),
+                          const SizedBox(height: 12),
+                          _buildDashboardAction(
+                            context,
+                            title: 'My Services',
+                            subtitle: 'Manage the services you offer',
+                            icon: Icons.construction_outlined,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ManageServicesScreen(
+                                  currentServices: provider.services,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _buildDashboardAction(
+                            context,
+                            title: 'My Reviews',
+                            subtitle: 'See what customers are saying',
+                            icon: Icons.star_outline,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => MyReviewsScreen(
+                                  providerId: provider.uid,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+                  ],
+                ),
               );
             },
           );
@@ -54,32 +218,133 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  // ... (helpers remain the same)
-   Widget _buildStatCard(String title, String value, IconData icon, Color color) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(icon, size: 40, color: color),
-            const SizedBox(width: 16),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(title, style: const TextStyle(color: Colors.grey)),
-                Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ],)
-          ],
-        ),
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00B4D8).withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              icon,
+              size: 24,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF1A365D),
+            ),
+          ),
+        ],
       ),
     );
   }
-  Widget _buildDashboardAction(BuildContext context, {required String title, required String subtitle, required IconData icon, required VoidCallback onTap, Widget? trailing}) {
-    return Card(
-      child: ListTile(
-        leading: Icon(icon, size: 30),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        trailing: trailing ?? const Icon(Icons.arrow_forward_ios),
-        onTap: onTap,
+
+  Widget _buildDashboardAction(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+    Widget? trailing,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF00B4D8).withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF00B4D8).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 24,
+                    color: const Color(0xFF00B4D8),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Color(0xFF1A365D),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          color: const Color(0xFF1A365D).withOpacity(0.7),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                trailing ??
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: const Color(0xFF1A365D).withOpacity(0.5),
+                    ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

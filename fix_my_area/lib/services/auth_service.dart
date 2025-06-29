@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -34,24 +32,7 @@ class AuthService {
         password: password,
       );
       
-      List<String> defaultServices = isServiceProvider ? ['Plumbing', 'Electrical', 'Cleaning'] : [];
-      String defaultBio = isServiceProvider ? 'Experienced and reliable professional dedicated to quality service.' : '';
-      String defaultRate = isServiceProvider ? 'From 5,000 RWF/hr' : '';
-      GeoPoint? defaultLocation;
-      if (isServiceProvider) {
-        // Assign a random location around Kigali for testing purposes
-        final random = Random();
-        double lat = -1.9441 + (random.nextDouble() - 0.5) * 0.2;
-        double lng = 30.0619 + (random.nextDouble() - 0.5) * 0.2;
-        defaultLocation = GeoPoint(lat, lng);
-      }
-
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        // ... (all other fields)
-        'photoUrl': '',
-        'location': defaultLocation, // Add this line
-      });
-
+      // Default data is now much simpler. Services and location are added later.
       await _firestore.collection('users').doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'name': name,
@@ -59,10 +40,11 @@ class AuthService {
         'phone': phone,
         'role': isServiceProvider ? 'provider' : 'customer',
         'createdAt': Timestamp.now(),
-        'services': defaultServices,
-        'bio': defaultBio,
-        'rate': defaultRate,
+        'services': [], // Starts empty
+        'bio': '',
+        'rate': '',
         'photoUrl': '',
+        'location': null, // Starts empty
       });
       
       return userCredential;

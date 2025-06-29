@@ -49,5 +49,16 @@
 	<string>This app needs access to your location to show you nearby service providers.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs access to your location to show you nearby service providers.</string>
+		<!-- Camera permission -->
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to camera to take photos for reviews and service requests.</string>
+
+	<!-- Photo library permission -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photo library to select images for reviews and service requests.</string>
+
+	<!-- Photo library add permission (iOS 11+) -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs permission to save photos to your photo library.</string>
 </dict>
 </plist>

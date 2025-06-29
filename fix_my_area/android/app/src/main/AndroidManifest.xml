@@ -1,4 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Camera permission -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- External storage permissions -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" 
+                    android:maxSdkVersion="28" />
+
+    <!-- Internet permission (if you need to upload images) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:label="fix_my_area"
         android:name="${applicationName}"

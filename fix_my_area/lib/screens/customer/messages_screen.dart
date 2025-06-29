@@ -21,7 +21,26 @@ class MessagesScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasError) return const Center(child: Text('Something went wrong.'));
           if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('You have no messages yet.'));
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.chat_outlined, size: 80, color: Colors.grey.shade400),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No Messages Yet',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Your conversations will appear here.',
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            );
+          }
           
           final chatRooms = snapshot.data!;
           return ListView.builder(
@@ -43,7 +62,7 @@ class MessagesScreen extends StatelessWidget {
                     final tempReceiver = UserModel(
                       uid: otherUserId,
                       name: otherUserName,
-                      email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: ''
+                      email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: '', district: '', sector: ''
                     );
                     Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(receiver: tempReceiver)));
                   },

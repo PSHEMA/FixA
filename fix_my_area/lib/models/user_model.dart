@@ -9,7 +9,9 @@ class UserModel {
   final List<String> services;
   final String bio;
   final String rate;
-  final String photoUrl;
+  String photoUrl; // Make this non-final so we can update it
+  final String district;
+  final String sector;
 
   UserModel({
     required this.uid,
@@ -21,6 +23,8 @@ class UserModel {
     required this.bio,
     required this.rate,
     required this.photoUrl,
+    required this.district,
+    required this.sector,
   });
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
@@ -32,11 +36,11 @@ class UserModel {
       phone: data['phone'] ?? '',
       role: data['role'] ?? 'customer',
       services: List<String>.from(data['services'] ?? []),
-      bio: data['bio'] ?? 'No bio available.',
-      rate: data['rate'] ?? 'Not specified',
+      bio: data['bio'] ?? '',
+      rate: data['rate'] ?? '',
       photoUrl: data['photoUrl'] ?? '',
+      district: data['district'] ?? '',
+      sector: data['sector'] ?? '',
     );
   }
-
-  get location => null;
 }

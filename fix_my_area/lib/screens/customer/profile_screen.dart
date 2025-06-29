@@ -1,5 +1,5 @@
 import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/screens/provider/edit_profile_screen.dart';
+import 'package:fix_my_area/screens/customer/edit_profile_screen.dart';
 import 'package:fix_my_area/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fix_my_area/screens/customer/my_reviews_screen.dart';
@@ -7,76 +7,300 @@ import 'package:fix_my_area/screens/customer/my_reviews_screen.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
+  Widget _buildMenuTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? iconColor,
+    Color? textColor,
+    FontWeight? fontWeight,
+    bool showTrailing = true,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: (iconColor ?? Colors.grey[600])!.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            color: iconColor ?? Colors.grey[600],
+            size: 22,
+          ),
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: textColor ?? Colors.black87,
+            fontWeight: fontWeight ?? FontWeight.w500,
+            fontSize: 16,
+          ),
+        ),
+        trailing: showTrailing
+            ? Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey[400],
+              )
+            : null,
+        onTap: onTap,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionDivider(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: Divider(
+              color: Colors.grey[300],
+              thickness: 1,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              title,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Divider(
+              color: Colors.grey[300],
+              thickness: 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: const Text(
+          'My Profile',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
       ),
       body: FutureBuilder<UserModel?>(
         future: authService.getUserDetails(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
           if (!snapshot.hasData) {
-            return const Center(child: Text('Could not load profile data.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Could not load profile data.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            );
           }
           final user = snapshot.data!;
 
-          return ListView(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
-            children: [
-              Center(
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey.shade300,
-                      child: const Icon(Icons.person, size: 50),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(user.name, style: Theme.of(context).textTheme.headlineSmall),
-                    const SizedBox(height: 4),
-                    Text(user.email, style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.grey[600])),
-                  ],
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                // Profile Header Section
+                Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                          child: Icon(
+                            Icons.person,
+                            size: 60,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        user.name,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          user.email,
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 30),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.edit_outlined),
-                title: const Text('Edit Profile'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => EditProfileScreen(user: user))),
-              ),
-              ListTile(
-                leading: const Icon(Icons.star_outline),
-                title: const Text('My Reviews'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MyReviewsScreen())),
-              ),
-              ListTile(
-                leading: const Icon(Icons.language_outlined),
-                title: const Text('Language'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.help_outline),
-                title: const Text('Help & FAQs'),
-                trailing: const Icon(Icons.arrow_forward_ios),
-                onTap: () {},
-              ),
-              const Divider(),
-              ListTile(
-                leading: Icon(Icons.logout, color: Theme.of(context).primaryColor),
-                title: Text('Sign Out', style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
-                onTap: () => authService.signOut(),
-              ),
-            ],
+                const SizedBox(height: 24),
+
+                // Account Section
+                _buildSectionDivider('ACCOUNT'),
+                _buildMenuTile(
+                  icon: Icons.edit_outlined,
+                  title: 'Edit Profile',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => EditProfileScreen(user: user)),
+                  ),
+                ),
+                _buildMenuTile(
+                  icon: Icons.star_outline,
+                  title: 'My Reviews',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const MyReviewsScreen()),
+                  ),
+                ),
+
+                // Settings Section
+                _buildSectionDivider('SETTINGS'),
+                _buildMenuTile(
+                  icon: Icons.language_outlined,
+                  title: 'Language',
+                  onTap: () {},
+                ),
+                _buildMenuTile(
+                  icon: Icons.help_outline,
+                  title: 'Help & FAQs',
+                  onTap: () {},
+                ),
+                _buildMenuTile(
+                  icon: Icons.privacy_tip_outlined,
+                  title: 'Privacy Policy',
+                  onTap: () {},
+                ),
+                _buildMenuTile(
+                  icon: Icons.info_outline,
+                  title: 'About',
+                  onTap: () {},
+                ),
+
+                // Sign Out Section
+                _buildSectionDivider(''),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Theme.of(context).primaryColor.withOpacity(0.3),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.logout,
+                        color: Theme.of(context).primaryColor,
+                        size: 22,
+                      ),
+                    ),
+                    title: Text(
+                      'Sign Out',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onTap: () => authService.signOut(),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32), // Bottom padding
+              ],
+            ),
           );
         },
       ),

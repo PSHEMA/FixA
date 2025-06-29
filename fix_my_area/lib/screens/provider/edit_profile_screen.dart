@@ -1,6 +1,9 @@
 import 'package:fix_my_area/models/user_model.dart';
 import 'package:fix_my_area/services/auth_service.dart';
+import 'package:fix_my_area/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:fix_my_area/services/storage_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserModel user;
@@ -13,6 +16,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final AuthService _authService = AuthService();
+  final StorageService _storageService = StorageService();
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
   late TextEditingController _bioController;
@@ -56,12 +60,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           SnackBar(
             content: Row(
               children: [
-                Icon(Icons.check_circle, color: Colors.white),
+                const Icon(Icons.check_circle, color: Colors.white),
                 const SizedBox(width: 12),
-                Text('Profile updated successfully!'),
+                Text(
+                  'Profile updated successfully!',
+                  style: GoogleFonts.lato(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ],
             ),
-            backgroundColor: const Color(0xFF34C759),
+            backgroundColor: AppTheme.darkGreen,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -76,14 +86,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           SnackBar(
             content: Row(
               children: [
-                Icon(Icons.error, color: Colors.white),
+                const Icon(Icons.error, color: Colors.white),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text('Failed to update profile: ${e.toString()}'),
+                  child: Text(
+                    'Failed to update profile: ${e.toString()}',
+                    style: GoogleFonts.lato(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),
-            backgroundColor: const Color(0xFFFF3B30),
+            backgroundColor: Colors.red.shade600,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -99,24 +115,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Edit Profile',
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: GoogleFonts.lato(
+            fontWeight: FontWeight.bold,
+            color: AppTheme.accentColor,
+          ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.black87,
+        backgroundColor: AppTheme.primaryColor,
+        foregroundColor: AppTheme.accentColor,
+        elevation: 4,
         actions: [
           if (!_isLoading)
             TextButton(
               onPressed: _saveProfile,
-              child: const Text(
+              child: Text(
                 'Save',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
+                style: GoogleFonts.lato(
+                  fontWeight: FontWeight.bold,
                   fontSize: 16,
+                  color: AppTheme.accentColor,
                 ),
               ),
             ),
@@ -131,15 +151,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               margin: const EdgeInsets.all(20),
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.accentColor,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: AppTheme.primaryColor.withOpacity(0.1),
                     blurRadius: 10,
-                    offset: const Offset(0, 2),
+                    offset: const Offset(0, 4),
                   ),
                 ],
+                border: Border.all(
+                  color: AppTheme.primaryColor.withOpacity(0.1),
+                  width: 1,
+                ),
               ),
               child: Column(
                 children: [
@@ -150,49 +174,81 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.blue.shade400,
-                              Colors.blue.shade600,
-                            ],
-                          ),
+                          gradient: widget.user.photoUrl.isNotEmpty 
+                            ? null 
+                            : LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppTheme.primaryColor,
+                                  AppTheme.darkGreen,
+                                ],
+                              ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.blue.withOpacity(0.3),
+                              color: AppTheme.primaryColor.withOpacity(0.3),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.person_rounded,
-                          size: 50,
-                          color: Colors.white,
-                        ),
+                        child: widget.user.photoUrl.isNotEmpty
+                          ? ClipOval(
+                              child: Image.network(
+                                widget.user.photoUrl,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.person_rounded,
+                              size: 50,
+                              color: Colors.white,
+                            ),
                       ),
                       Positioned(
                         bottom: 0,
                         right: 0,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt_rounded,
-                            size: 16,
-                            color: Colors.grey,
+                        child: GestureDetector(
+                          onTap: () async {
+                            final file = await _storageService.pickImage();
+                            if (file != null) {
+                              setState(() => _isLoading = true);
+                              try {
+                                final downloadUrl = await _storageService.uploadProfilePicture(file);
+                                await _authService.updateUserProfile({'photoUrl': downloadUrl});
+                                setState(() => widget.user.photoUrl = downloadUrl);
+                              } catch (e) {
+                                if (mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Failed to update photo: ${e.toString()}')),
+                                  );
+                                }
+                              } finally {
+                                setState(() => _isLoading = false);
+                              }
+                            }
+                          },
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: AppTheme.secondaryGold,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppTheme.secondaryGold.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt_rounded,
+                              size: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -201,10 +257,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 16),
                   Text(
                     'Update Profile Picture',
-                    style: TextStyle(
+                    style: GoogleFonts.lato(
                       fontSize: 14,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
+                      color: AppTheme.textColor.withOpacity(0.7),
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -216,15 +272,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.accentColor,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: AppTheme.primaryColor.withOpacity(0.1),
                     blurRadius: 10,
-                    offset: const Offset(0, 2),
+                    offset: const Offset(0, 4),
                   ),
                 ],
+                border: Border.all(
+                  color: AppTheme.primaryColor.withOpacity(0.1),
+                  width: 1,
+                ),
               ),
               child: Form(
                 key: _formKey,
@@ -233,10 +293,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     Text(
                       'Personal Information',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[800],
+                      style: GoogleFonts.lato(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -289,16 +349,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: _isLoading 
                 ? Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: AppTheme.primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AppTheme.primaryColor.withOpacity(0.2),
+                        width: 1,
+                      ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: SizedBox(
                         width: 24,
                         height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                          valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
                         ),
                       ),
                     ),
@@ -306,19 +370,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 : ElevatedButton(
                     onPressed: _saveProfile,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF007AFF),
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppTheme.primaryColor,
+                      foregroundColor: AppTheme.accentColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      elevation: 0,
-                      shadowColor: Colors.transparent,
+                      elevation: 2,
+                      shadowColor: AppTheme.primaryColor.withOpacity(0.3),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Save Changes',
-                      style: TextStyle(
+                      style: GoogleFonts.lato(
                         fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -345,10 +409,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: GoogleFonts.lato(
             fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey[700],
+            fontWeight: FontWeight.bold,
+            color: AppTheme.primaryColor,
           ),
         ),
         const SizedBox(height: 8),
@@ -357,45 +421,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           keyboardType: keyboardType,
           maxLines: maxLines,
           validator: validator,
-          style: const TextStyle(
+          style: GoogleFonts.lato(
             fontSize: 16,
             fontWeight: FontWeight.w500,
+            color: AppTheme.textColor,
           ),
           decoration: InputDecoration(
             hintText: hintText,
             prefixIcon: Icon(
               icon,
-              color: Colors.grey[500],
+              color: AppTheme.primaryColor.withOpacity(0.7),
               size: 20,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(color: AppTheme.primaryColor.withOpacity(0.3)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: BorderSide(color: AppTheme.primaryColor.withOpacity(0.3)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF007AFF), width: 2),
+              borderSide: const BorderSide(color: AppTheme.primaryColor, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFFF3B30)),
+              borderSide: BorderSide(color: Colors.red.shade600),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFFF3B30), width: 2),
+              borderSide: BorderSide(color: Colors.red.shade600, width: 2),
             ),
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor: AppTheme.backgroundColor.withOpacity(0.3),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16,
               vertical: maxLines > 1 ? 16 : 14,
             ),
-            hintStyle: TextStyle(
-              color: Colors.grey[500],
+            hintStyle: GoogleFonts.lato(
+              color: AppTheme.textColor.withOpacity(0.5),
               fontSize: 16,
             ),
           ),

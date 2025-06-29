@@ -14,7 +14,6 @@ class ServiceProvidersScreen extends StatefulWidget {
 class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
   final AuthService _authService = AuthService();
   late Future<List<UserModel>> _providersFuture;
-  int _selectedFilterIndex = 0; // 0: All, 1: Top Rated
 
   @override
   void initState() {
@@ -24,7 +23,6 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
   
   void _loadProviders() {
     setState(() {
-      // TODO: Add different query logic for 'Top Rated' and 'Nearby'
       _providersFuture = _authService.getProvidersByCategory(widget.categoryName);
     });
   }
@@ -33,62 +31,52 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.categoryName)),
-      body: Column(
-        children: [
-          _buildFilterChips(),
-          Expanded(
-            child: FutureBuilder<List<UserModel>>(
-              future: _providersFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-                if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('No providers found.'));
-                
-                final providers = snapshot.data!;
-                return ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: providers.length,
-                  itemBuilder: (context, index) {
-                    final provider = providers[index];
-                    return Card(
-                      child: ListTile(
-                        leading: CircleAvatar(child: const Icon(Icons.person)),
-                        title: Text(provider.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text('Expert in ${provider.services.first} & more'),
-                        trailing: const Icon(Icons.arrow_forward_ios),
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProviderProfileScreen(provider: provider))),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      body: FutureBuilder<List<UserModel>>(
+        future: _providersFuture,
+        builder: (context, snapshot) {
+          // 1. While waiting for data, show a loading spinner.
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-  Widget _buildFilterChips() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          FilterChip(
-            label: const Text('All'),
-            selected: _selectedFilterIndex == 0,
-            onSelected: (selected) => setState(() => _selectedFilterIndex = 0),
-          ),
-          const SizedBox(width: 8),
-          FilterChip(
-            label: const Text('Top Rated'),
-            selected: _selectedFilterIndex == 1,
-            onSelected: (selected) {
-              setState(() => _selectedFilterIndex = 1);
-              // In a real app, you'd call a different service method here
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Filtering by rating coming soon!')));
+          // 2. THE FIX: If there's an error, display it instead of a blank screen.
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Error: ${snapshot.error}\n\nThis usually means a Firestore index is missing. Please create it in your Firebase console.'),
+              ),
+            );
+          }
+
+          // 3. If there's no data, show a clear message.
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No providers found for this category yet.'));
+          }
+          
+          // 4. If everything is successful, show the list.
+          final providers = snapshot.data!;
+          return ListView.builder(
+            padding: const EdgeInsets.all(8.0),
+            itemCount: providers.length,
+            itemBuilder: (context, index) {
+              final provider = providers[index];
+              return Card(
+                margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: provider.photoUrl.isNotEmpty ? NetworkImage(provider.photoUrl) : null,
+                    child: provider.photoUrl.isEmpty ? const Icon(Icons.person) : null,
+                  ),
+                  title: Text(provider.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text('Location: ${provider.sector}, ${provider.district}'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProviderProfileScreen(provider: provider))),
+                ),
+              );
             },
-          ),
-        ],
+          );
+        },
       ),
     );
   }

@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Define your core colors - OM Theme
-  static const Color primaryColor = Color(0xFF00B4D8); // OM Sky Blue
+  // Venezia FC Theme
+  static const Color primaryColor = Color(0xFF1B5E20); // Venezia Dark Green
   static const Color accentColor = Color(0xFFFFFFFF); // White
-  static const Color backgroundColor = Color(0xFFF8FCFF); // Very light blue tint
-  static const Color textColor = Color(0xFF1A365D); // Deep blue-grey for text
-  static const Color secondaryBlue = Color(0xFF0077B6); // Darker blue for variety
+  static const Color backgroundColor = Color(0xFFF1F8E9); // Very light green tint
+  static const Color textColor = Color(0xFF1B1B1B); // Almost black for text
+  static const Color secondaryGold = Color(0xFFFF8F00); // Venezia Gold/Orange
+  static const Color darkGreen = Color(0xFF2E7D32); // Lighter green for variety
 
   // Method to get the application's theme data
   static ThemeData get theme {
@@ -19,7 +20,7 @@ class AppTheme {
         seedColor: primaryColor,
         primary: primaryColor,
         onPrimary: accentColor, // Text on primary color
-        secondary: secondaryBlue,
+        secondary: secondaryGold,
         surface: backgroundColor,
         onSurface: textColor,
       ),
@@ -88,9 +89,9 @@ class AppTheme {
       ),
 
       // FloatingActionButton Theme
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: primaryColor,
-        foregroundColor: accentColor,
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: secondaryGold,
+        foregroundColor: textColor,
       ),
 
       // Card Theme
@@ -100,6 +101,26 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+      ),
+
+      // Additional theme elements for Venezia FC styling
+      dividerTheme: DividerThemeData(
+        color: primaryColor.withOpacity(0.2),
+      ),
+
+      // IconButton Theme
+      iconButtonTheme: IconButtonThemeData(
+        style: IconButton.styleFrom(
+          foregroundColor: primaryColor,
+        ),
+      ),
+
+      // Chip Theme
+      chipTheme: ChipThemeData(
+        backgroundColor: backgroundColor,
+        selectedColor: secondaryGold,
+        labelStyle: GoogleFonts.lato(color: textColor),
+        side: BorderSide(color: primaryColor.withOpacity(0.3)),
       ),
     );
   }

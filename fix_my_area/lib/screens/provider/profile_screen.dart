@@ -2,6 +2,7 @@ import 'package:fix_my_area/models/user_model.dart';
 import 'package:fix_my_area/screens/provider/edit_profile_screen.dart';
 import 'package:fix_my_area/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -9,26 +10,27 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
+    final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.scaffoldBackgroundColor, // Use theme background
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Profile',
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: theme.appBarTheme.titleTextStyle,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.black87,
+        backgroundColor: theme.colorScheme.primary,
+        elevation: 4.0,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
       body: FutureBuilder<UserModel?>(
         future: authService.getUserDetails(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(
                 strokeWidth: 3,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
               ),
             );
           }
@@ -37,13 +39,17 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
+                  Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.grey[400],
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Could not load profile data.',
-                    style: TextStyle(
+                    style: GoogleFonts.lato(
                       fontSize: 16,
-                      color: Colors.grey[600],
+                      color: theme.colorScheme.onSurface,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -60,71 +66,75 @@ class ProfileScreen extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(28),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
+                        color: theme.colorScheme.primary.withOpacity(0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: Column(
                     children: [
                       Container(
-                        width: 100,
-                        height: 100,
+                        width: 110,
+                        height: 110,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              Colors.blue.shade400,
-                              Colors.blue.shade600,
+                              theme.colorScheme.primary,
+                              theme.colorScheme.secondary,
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.blue.withOpacity(0.3),
+                              color: theme.colorScheme.primary.withOpacity(0.3),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
                           ],
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.person_rounded,
-                          size: 50,
-                          color: Colors.white,
+                          size: 55,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
                       Text(
                         user.name,
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: GoogleFonts.lato(
+                          fontSize: 26,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                          horizontal: 16,
+                          vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(20),
+                          color: theme.scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(25),
+                          border: Border.all(
+                            color: theme.colorScheme.primary.withOpacity(0.2),
+                            width: 1,
+                          ),
                         ),
                         child: Text(
                           user.email,
-                          style: TextStyle(
+                          style: GoogleFonts.lato(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: theme.colorScheme.onSurface,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -137,13 +147,13 @@ class ProfileScreen extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
+                        color: theme.colorScheme.primary.withOpacity(0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -154,7 +164,7 @@ class ProfileScreen extends StatelessWidget {
                         icon: Icons.edit_rounded,
                         title: 'Edit Profile',
                         subtitle: 'Update your personal information',
-                        color: const Color(0xFF007AFF),
+                        color: theme.colorScheme.primary,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -168,7 +178,7 @@ class ProfileScreen extends StatelessWidget {
                         icon: Icons.language_rounded,
                         title: 'Language',
                         subtitle: 'English',
-                        color: const Color(0xFF5856D6),
+                        color: theme.colorScheme.secondary,
                         onTap: () {},
                         showDivider: true,
                       ),
@@ -177,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
                         icon: Icons.help_outline_rounded,
                         title: 'Help & FAQs',
                         subtitle: 'Get help and support',
-                        color: const Color(0xFF34C759),
+                        color: theme.colorScheme.primary,
                         onTap: () {},
                         showDivider: false,
                       ),
@@ -191,13 +201,13 @@ class ProfileScreen extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: theme.colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
+                        color: theme.colorScheme.primary.withOpacity(0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -206,7 +216,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: Icons.logout_rounded,
                     title: 'Sign Out',
                     subtitle: 'Sign out of your account',
-                    color: const Color(0xFFFF3B30),
+                    color: const Color(0xFFD32F2F), // Material red for destructive action
                     onTap: () => _showSignOutDialog(context, authService),
                     showDivider: false,
                     isDestructive: true,
@@ -232,6 +242,8 @@ class ProfileScreen extends StatelessWidget {
     required bool showDivider,
     bool isDestructive = false,
   }) {
+    final theme = Theme.of(context);
+    
     return Column(
       children: [
         Material(
@@ -244,39 +256,37 @@ class ProfileScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    width: 48,
-                    height: 48,
+                    width: 52,
+                    height: 52,
                     decoration: BoxDecoration(
-                      color: isDestructive 
-                          ? color.withOpacity(0.1) 
-                          : color.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: color.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     child: Icon(
                       icon,
-                      size: 24,
+                      size: 26,
                       color: color,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 18),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           title,
-                          style: TextStyle(
+                          style: GoogleFonts.lato(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: isDestructive ? color : Colors.black87,
+                            color: isDestructive ? color : theme.colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           subtitle,
-                          style: TextStyle(
+                          style: GoogleFonts.lato(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: theme.colorScheme.onSurface.withOpacity(0.7),
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -285,8 +295,8 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                    color: Colors.grey[400],
+                    size: 18,
+                    color: theme.colorScheme.onSurface.withOpacity(0.4),
                   ),
                 ],
               ),
@@ -297,8 +307,8 @@ class ProfileScreen extends StatelessWidget {
           Divider(
             height: 1,
             thickness: 1,
-            color: Colors.grey[100],
-            indent: 84,
+            color: theme.scaffoldBackgroundColor,
+            indent: 90,
             endIndent: 20,
           ),
       ],
@@ -306,32 +316,39 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _showSignOutDialog(BuildContext context, AuthService authService) {
+    final theme = Theme.of(context);
+    
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: theme.colorScheme.surface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Text(
+          title: Text(
             'Sign Out',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
+            style: GoogleFonts.lato(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
             ),
           ),
-          content: const Text(
+          content: Text(
             'Are you sure you want to sign out of your account?',
-            style: TextStyle(fontSize: 16),
+            style: GoogleFonts.lato(
+              fontSize: 16,
+              color: theme.colorScheme.onSurface,
+            ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text(
                 'Cancel',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.w500,
+                style: GoogleFonts.lato(
+                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -341,16 +358,20 @@ class ProfileScreen extends StatelessWidget {
                 authService.signOut();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFF3B30),
+                backgroundColor: const Color(0xFFD32F2F),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               ),
-              child: const Text(
+              child: Text(
                 'Sign Out',
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: GoogleFonts.lato(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
             ),
           ],

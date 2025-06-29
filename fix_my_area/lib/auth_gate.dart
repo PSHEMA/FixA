@@ -5,6 +5,7 @@ import 'package:fix_my_area/screens/customer/main_scaffold_customer.dart';
 import 'package:fix_my_area/screens/provider/main_scaffold_provider.dart';
 import 'package:fix_my_area/screens/login_screen.dart';
 import 'package:fix_my_area/services/auth_service.dart';
+import 'package:fix_my_area/screens/provider/onboarding_services_screen.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -40,6 +41,10 @@ class AuthGate extends StatelessWidget {
 
             // ROLE-BASED REDIRECTION
             if (user.role == 'provider') {
+              // If provider hasn't set services yet, send them to onboarding
+              if (user.services.isEmpty) {
+                return const OnboardingServicesScreen();
+              }
               return const MainScaffoldProvider();
             } else {
               return const MainScaffoldCustomer();

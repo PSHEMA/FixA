@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:fix_my_area/auth_gate.dart';
 import 'package:flutter/material.dart';
+import 'package:fix_my_area/onboarding_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -104,15 +104,10 @@ class _SplashScreenState extends State<SplashScreen>
     _startAnimationSequence();
     
     // Navigate after delay
-    Timer(const Duration(milliseconds: 2800), () {
+    Timer(const Duration(milliseconds: 2500), () {
       Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => const AuthGate(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          transitionDuration: const Duration(milliseconds: 500),
-        ),
+        // Navigate to the router, not the AuthGate directly
+        MaterialPageRoute(builder: (context) => const OnboardingRouter()),
       );
     });
   }
