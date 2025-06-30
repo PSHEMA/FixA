@@ -8,7 +8,6 @@ This project was developed as a Capstone for the BSc. in Software Engineering pr
 
 ### 🎥 Demo Video
 
-[LINK TO YOUR 5-MINUTE DEMO VIDEO HERE - e.g., YouTube, Loom, Google Drive]
 
 ---
 
