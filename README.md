@@ -49,6 +49,7 @@ The application was tested using several strategies to ensure functionality, sta
 #### **Demonstration with Different Testing Strategies**
 
 * **User Acceptance Testing (UAT):** The application was tested by a small group of users acting in the roles of "Customer" and "Service Provider." The primary test case involved the end-to-end flow of booking a service. The "Customer" was able to successfully find a provider, book a job, and leave a review. The "Provider" successfully received the job notification, managed the booking, and viewed the final review.
+
     ![Provider's Dashboard](./screenshots/Provider's%20Dashboard.jpg)
     ![Customer's Bookings](./screenshots/Customer's%20bookings%20list.jpg)
 * **Integration Testing:** The successful completion of the UAT flow confirmed that all backend services (Firebase Authentication, Firestore, Storage) and core business logic are correctly integrated and communicating as expected. The real-time notification system was validated when a provider received a job request instantly after a customer submitted it.
