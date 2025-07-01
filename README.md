@@ -7,7 +7,7 @@ This project was developed as a Capstone for the BSc. in Software Engineering pr
 ---
 
 ### 🎥 Demo Video
-
+![Demo](./media/App%20Demo.mp4)
 
 ---
 
