@@ -1,7 +1,6 @@
-import 'package:fix_my_area/screens/onboarding/welcome_screen.dart';
+import 'package:fix_my_area/screens/onboarding/terms_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math';
 
 class OnboardingScreen extends StatefulWidget {
@@ -15,11 +14,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   bool _isLastPage = false;
 
-  Future<void> _onDone() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isFirstTime', false);
+  void _onDone() {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+      MaterialPageRoute(builder: (_) => const TermsScreen()),
     );
   }
 
@@ -32,18 +29,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           PageView(
             controller: _controller,
             onPageChanged: (index) {
-              setState(() => _isLastPage = index == 1);
+              setState(() => _isLastPage = index == 2);
             },
             children: const [
               _OnboardingPage(
                 icon: Icons.search_rounded,
-                title: 'Find Trusted Help. Fast.',
-                subtitle: 'Connect with skilled and reviewed local service providers for any job, big or small.',
+                title: 'Find Trusted Local Pros',
+                subtitle: 'From plumbing to painting, connect with skilled and reviewed service providers right in your neighborhood.',
               ),
               _OnboardingPage(
                 icon: Icons.calendar_month_rounded,
-                title: 'Book, Manage, and Review.',
-                subtitle: 'Seamlessly schedule jobs, chat with providers, and leave feedback, all in one place.',
+                title: 'Book & Manage with Ease',
+                subtitle: 'Schedule jobs, chat directly with your provider, and track all your appointments in one simple place.',
+              ),
+              _OnboardingPage(
+                icon: Icons.business_rounded,
+                title: 'Grow Your Business',
+                subtitle: 'Are you a service provider? Reach more customers, manage your schedule, and build your online reputation.',
               ),
             ],
           ),
@@ -57,14 +59,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 TextButton(onPressed: _onDone, child: const Text('SKIP')),
                 SmoothPageIndicator(
                   controller: _controller,
-                  count: 2,
+                  count: 3,
                   effect: WormEffect(
                     dotColor: Colors.grey.shade400,
                     activeDotColor: Theme.of(context).primaryColor,
                   ),
                 ),
                 _isLastPage
-                    ? TextButton(onPressed: _onDone, child: const Text('DONE'))
+                    ? TextButton(onPressed: _onDone, child: const Text('GET STARTED'))
                     : TextButton(
                         onPressed: () => _controller.nextPage(
                           duration: const Duration(milliseconds: 500),
@@ -99,13 +101,26 @@ class _OnboardingPageState extends State<_OnboardingPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeIn;
+  late Animation<Offset> _slideIn;
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 700));
-    _fadeIn = CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    _fadeIn = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeIn,
+    );
+    _slideIn = Tween<Offset>(
+      begin: const Offset(0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    ));
     _animationController.forward();
   }
 
@@ -117,14 +132,42 @@ class _OnboardingPageState extends State<_OnboardingPage>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeIn,
+  return FadeTransition(
+    opacity: _fadeIn,
+    child: SlideTransition(
+      position: _slideIn,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(widget.icon, size: 150, color: Theme.of(context).primaryColor),
+            Container(
+              height: 250,
+              width: 250,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).primaryColor.withOpacity(0.2),
+                    Theme.of(context).primaryColor.withOpacity(0.05),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    blurRadius: 30,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Icon(
+                widget.icon,
+                size: 120,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
             const SizedBox(height: 48),
             Text(
               widget.title,
@@ -137,15 +180,17 @@ class _OnboardingPageState extends State<_OnboardingPage>
             Text(
               widget.subtitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey.shade600,
-                  ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
               textAlign: TextAlign.center,
             ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 class _BackgroundDecor extends StatelessWidget {
@@ -159,7 +204,16 @@ class _BackgroundDecor extends StatelessWidget {
           clipper: _TopWaveClipper(),
           child: Container(
             height: 200,
-            color: Theme.of(context).primaryColor.withOpacity(0.1),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).primaryColor.withOpacity(0.15),
+                  Theme.of(context).primaryColor.withOpacity(0.05),
+                ],
+              ),
+            ),
           ),
         ),
         Positioned(
@@ -167,13 +221,51 @@ class _BackgroundDecor extends StatelessWidget {
           right: -30,
           child: Transform.rotate(
             angle: pi / 4,
-            child: Icon(Icons.circle, size: 80, color: Colors.grey.shade200),
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                shape: BoxShape.circle,
+              ),
+            ),
           ),
         ),
         Positioned(
           bottom: 100,
           left: -20,
-          child: Icon(Icons.circle, size: 60, color: Colors.grey.shade100),
+          child: Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 150,
+          left: 30,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 200,
+          right: 50,
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
         ),
       ],
     );
