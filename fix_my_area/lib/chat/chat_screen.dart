@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fix_my_area/models/user_model.dart';
 import 'package:fix_my_area/services/auth_service.dart';
 import 'package:fix_my_area/services/chat_service.dart';
+import 'package:fix_my_area/services/storage_service.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -16,11 +17,19 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
+  final StorageService _storageService = StorageService();
 
-  void _sendMessage() async {
+  void _sendTextMessage() async {
     if (_messageController.text.isNotEmpty) {
-      await _chatService.sendMessage(widget.receiver, _messageController.text);
+      await _chatService.sendTextMessage(widget.receiver, _messageController.text);
       _messageController.clear();
+    }
+  }
+
+  void _sendImageMessage() async {
+    final file = await _storageService.pickImage();
+    if (file != null) {
+      await _chatService.sendImageMessage(widget.receiver, file);
     }
   }
 
@@ -55,16 +64,23 @@ class _ChatScreenState extends State<ChatScreen> {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
     bool isCurrentUser = data['senderId'] == _authService.currentUser!.uid;
     var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    var messageType = data['type'] ?? 'text';
+
     return Container(
       alignment: alignment,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(
           color: isCurrentUser ? Theme.of(context).primaryColor : Colors.grey[300],
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(data['text'], style: TextStyle(color: isCurrentUser ? Colors.white : Colors.black)),
+        child: messageType == 'image'
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(data['imageUrl'], width: 200),
+              )
+            : Text(data['text'], style: TextStyle(color: isCurrentUser ? Colors.white : Colors.black)),
       ),
     );
   }
@@ -74,6 +90,10 @@ class _ChatScreenState extends State<ChatScreen> {
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
       child: Row(
         children: [
+          IconButton(
+            icon: const Icon(Icons.attach_file),
+            onPressed: _sendImageMessage,
+          ),
           Expanded(
             child: TextField(
               controller: _messageController,
@@ -90,7 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton.filled(
             style: IconButton.styleFrom(backgroundColor: Theme.of(context).primaryColor),
             icon: const Icon(Icons.send, color: Colors.white),
-            onPressed: _sendMessage,
+            onPressed: _sendTextMessage,
           )
         ],
       ),

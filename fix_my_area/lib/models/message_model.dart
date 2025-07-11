@@ -5,12 +5,16 @@ class MessageModel {
   final String receiverId;
   final String text;
   final Timestamp timestamp;
+  final String type;
+  final String? imageUrl;
 
   MessageModel({
     required this.senderId,
     required this.receiverId,
     required this.text,
     required this.timestamp,
+    required this.type,
+    this.imageUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +23,8 @@ class MessageModel {
       'receiverId': receiverId,
       'text': text,
       'timestamp': timestamp,
+      'type': type,
+      'imageUrl': imageUrl,
     };
   }
 }

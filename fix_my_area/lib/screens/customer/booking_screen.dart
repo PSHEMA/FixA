@@ -41,15 +41,48 @@ class _BookingScreenState extends State<BookingScreen> {
     super.dispose();
   }
 
+  // NEW LOGIC: This function checks if a day should be disabled
+  bool _isDateSelectable(DateTime day) {
+    // 1. Check if the day is in the provider's days off
+    for (var dayOff in widget.provider.daysOff) {
+      DateTime dayOffDate = dayOff.toDate();
+      if (dayOffDate.year == day.year &&
+          dayOffDate.month == day.month &&
+          dayOffDate.day == day.day) {
+        return false; // It's a day off
+      }
+    }
+    
+    // 2. Check if the provider works on this day of the week
+    String weekday = DateFormat('EEEE').format(day); // e.g., "Monday"
+    if (!widget.provider.workingHours.containsKey(weekday)) {
+      return false; // Doesn't work on this day
+    }
+    
+    // 3. Check if the working hours for this day are not empty/null
+    var dayHours = widget.provider.workingHours[weekday];
+    if (dayHours == null || dayHours.toString().isEmpty) {
+      return false; // No working hours set for this day
+    }
+    
+    return true;
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
+      // Temporarily commented out to debug
+      // selectableDayPredicate: _isDateSelectable,
     );
     if (picked != null && picked != _selectedDate) {
-      setState(() => _selectedDate = picked);
+      setState(() {
+        _selectedDate = picked;
+        // Reset time when date changes
+        _selectedTime = null;
+      });
     }
   }
 
@@ -64,56 +97,56 @@ class _BookingScreenState extends State<BookingScreen> {
   }
   
   Future<void> _submitBooking() async {
-  if (!_formKey.currentState!.validate() || _selectedDate == null || _selectedTime == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Please fill all fields and select a date/time.')),
+    if (!_formKey.currentState!.validate() || _selectedDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill all fields and select a date/time.')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    // Fetch current user details to get their name
+    final currentUser = await _authService.getUserDetails();
+    if (currentUser == null) {
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    final bookingDateTime = DateTime(
+      _selectedDate!.year, _selectedDate!.month, _selectedDate!.day,
+      _selectedTime!.hour, _selectedTime!.minute
     );
-    return;
-  }
 
-  setState(() => _isLoading = true);
-
-  // Fetch current user details to get their name
-  final currentUser = await _authService.getUserDetails();
-  if (currentUser == null) {
-    setState(() => _isLoading = false);
-    return;
-  }
-
-  final bookingDateTime = DateTime(
-    _selectedDate!.year, _selectedDate!.month, _selectedDate!.day,
-    _selectedTime!.hour, _selectedTime!.minute
-  );
-
-  final newBooking = BookingModel(
-    id: '',
-    customerId: currentUser.uid,
-    customerName: currentUser.name,
-    providerId: widget.provider.uid,
-    providerName: widget.provider.name,
-    service: _selectedService!,
-    bookingTime: bookingDateTime,
-    description: _descriptionController.text,
-    status: 'pending',
-    createdAt: Timestamp.now(),
-    price: 0.0,
-    isReviewed: false,
-  );
-
-  try {
-    await _bookingService.createBooking(newBooking);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Booking request sent successfully!')),
+    final newBooking = BookingModel(
+      id: '',
+      customerId: currentUser.uid,
+      customerName: currentUser.name,
+      providerId: widget.provider.uid,
+      providerName: widget.provider.name,
+      service: _selectedService!,
+      bookingTime: bookingDateTime,
+      description: _descriptionController.text,
+      status: 'pending',
+      createdAt: Timestamp.now(),
+      price: 0.0,
+      isReviewed: false,
     );
-    Navigator.of(context).popUntil((route) => route.isFirst);
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to send booking: ${e.toString()}')),
-    );
-  } finally {
-    if(mounted) setState(() => _isLoading = false);
+
+    try {
+      await _bookingService.createBooking(newBooking);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Booking request sent successfully!')),
+      );
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to send booking: ${e.toString()}')),
+      );
+    } finally {
+      if(mounted) setState(() => _isLoading = false);
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +172,7 @@ class _BookingScreenState extends State<BookingScreen> {
               ),
               const SizedBox(height: 24),
 
-              Text('Choose Date & Time', style: Theme.of(context).textTheme.titleLarge),
+              Text('Choose Available Date & Time', style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
               Row(
                 children: [

@@ -53,7 +53,7 @@ class _JobsScreenState extends State<JobsScreen> {
                                 final tempReceiver = UserModel(
                                     uid: booking.customerId,
                                     name: booking.customerName,
-                                    email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: '', district: '', sector: ''
+                                    email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: '', district: '', sector: '', workingHours: {}, daysOff: [], isVerified: false
                                   );
                                 Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(receiver: tempReceiver)));
                               },

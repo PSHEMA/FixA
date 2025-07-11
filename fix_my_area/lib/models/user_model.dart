@@ -12,6 +12,9 @@ class UserModel {
   String photoUrl;
   final String district;
   final String sector;
+  final Map<String, dynamic> workingHours;
+  final List<Timestamp> daysOff;
+  final bool isVerified;
 
   UserModel({
     required this.uid,
@@ -25,6 +28,9 @@ class UserModel {
     required this.photoUrl,
     required this.district,
     required this.sector,
+    required this.workingHours,
+    required this.daysOff,
+    required this.isVerified,
   });
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
@@ -41,6 +47,9 @@ class UserModel {
       photoUrl: data['photoUrl'] ?? '',
       district: data['district'] ?? '',
       sector: data['sector'] ?? '',
+      workingHours: Map<String, dynamic>.from(data['workingHours'] ?? {}),
+      daysOff: List<Timestamp>.from(data['daysOff'] ?? []),
+      isVerified: data['isVerified'] ?? false,
     );
   }
 }

@@ -43,6 +43,13 @@ class AuthService {
         'rate': '',
         'photoUrl': '',
         'location': null,
+        'isVerified': isServiceProvider ? false : true,
+        'workingHours': {
+          'Monday': ['09:00', '17:00'], 'Tuesday': ['09:00', '17:00'],
+          'Wednesday': ['09:00', '17:00'], 'Thursday': ['09:00', '17:00'],
+          'Friday': ['09:00', '17:00'],
+        },
+        'daysOff': [],
       });
       
       return userCredential;
@@ -66,9 +73,9 @@ class AuthService {
       QuerySnapshot snapshot = await _firestore
           .collection('users')
           .where('role', isEqualTo: 'provider')
+          .where('isVerified', isEqualTo: true) // ** ADD THIS LINE **
           .where('services', arrayContains: category)
           .get();
-
       return snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList();
     } catch (e) {
       debugPrint("Error fetching providers: $e");
@@ -101,5 +108,25 @@ class AuthService {
       debugPrint("Error fetching all providers: $e");
       return [];
     }
+  }
+
+  Future<bool> isAdmin() async {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    final doc = await _firestore.collection('admins').doc(user.uid).get();
+    return doc.exists;
+  }
+
+  Stream<List<UserModel>> getUnverifiedProviders() {
+    return _firestore
+        .collection('users')
+        .where('role', isEqualTo: 'provider')
+        .where('isVerified', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList());
+  }
+
+  Future<void> verifyProvider(String uid) async {
+    await _firestore.collection('users').doc(uid).update({'isVerified': true});
   }
 }
