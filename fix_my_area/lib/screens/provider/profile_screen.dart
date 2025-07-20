@@ -1,8 +1,8 @@
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/screens/provider/edit_profile_screen.dart';
-import 'package:fix_my_area/screens/settings/help_screen.dart';
-import 'package:fix_my_area/screens/settings/language_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/screens/provider/edit_profile_screen.dart';
+import 'package:proci/screens/settings/help_screen.dart';
+import 'package:proci/screens/settings/language_screen.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

@@ -1,13 +1,13 @@
-import 'package:fix_my_area/models/booking_model.dart';
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/screens/provider/jobs_screen.dart';
-import 'package:fix_my_area/screens/provider/manage_services_screen.dart';
-import 'package:fix_my_area/screens/provider/my_reviews_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/booking_service.dart';
+import 'package:proci/models/booking_model.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/screens/provider/jobs_screen.dart';
+import 'package:proci/screens/provider/manage_services_screen.dart';
+import 'package:proci/screens/provider/my_reviews_screen.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/booking_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:fix_my_area/screens/provider/manage_availability_screen.dart';
+import 'package:proci/screens/provider/manage_availability_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});

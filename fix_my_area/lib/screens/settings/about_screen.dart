@@ -1,4 +1,4 @@
-import 'package:fix_my_area/theme/app_theme.dart';
+import 'package:proci/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -7,7 +7,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('About FixMyArea')),
+      appBar: AppBar(title: const Text('About Proci')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
@@ -16,7 +16,7 @@ class AboutScreen extends StatelessWidget {
             children: [
               const Icon(Icons.build_circle, size: 80, color: AppTheme.primaryColor),
               const SizedBox(height: 20),
-              Text('FixMyArea', style: Theme.of(context).textTheme.headlineLarge),
+              Text('Proci', style: Theme.of(context).textTheme.headlineLarge),
               const SizedBox(height: 10),
               const Text('Version 1.0.0', style: TextStyle(color: Colors.grey)),
               const SizedBox(height: 24),

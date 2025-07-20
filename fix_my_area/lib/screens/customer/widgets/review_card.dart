@@ -1,4 +1,4 @@
-import 'package:fix_my_area/models/review_model.dart';
+import 'package:proci/models/review_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

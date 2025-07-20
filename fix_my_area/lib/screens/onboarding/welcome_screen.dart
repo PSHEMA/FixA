@@ -1,5 +1,5 @@
-import 'package:fix_my_area/auth_gate.dart';
-import 'package:fix_my_area/screens/signup_screen.dart';
+import 'package:proci/auth_gate.dart';
+import 'package:proci/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -18,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
               Icon(Icons.build_circle_outlined, size: 100, color: Theme.of(context).primaryColor),
               const SizedBox(height: 20),
-              const Text('Welcome to FixMyArea', textAlign: TextAlign.center, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              const Text('Welcome to Proci', textAlign: TextAlign.center, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
               Text('Your one-stop solution for trusted local services.', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, color: Colors.grey.shade600)),
               const Spacer(),

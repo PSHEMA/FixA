@@ -1,6 +1,6 @@
-# FixMyArea - Local Services Aggregator
+# Proci - Local Services Aggregator
 
-**FixMyArea** is a mobile application built with Flutter, designed to bridge the gap between customers and reliable local service providers in Kigali, Rwanda. It provides a seamless, two-sided marketplace where users can find, book, and review services, while providers can manage their jobs, profile, and customer feedback.
+**Proci** is a mobile application built with Flutter, designed to bridge the gap between customers and reliable local service providers in Kigali, Rwanda. It provides a seamless, two-sided marketplace where users can find, book, and review services, while providers can manage their jobs, profile, and customer feedback.
 
 This project was developed as a Capstone for the BSc. in Software Engineering program at ALU.
 
@@ -138,5 +138,5 @@ Follow these steps to run the application on your local machine.
 
 ### 📦 Deployed Version / Application Package
 
-* **APK:** [FixMyArea](./release/app-release.apk)
+* **APK:** [Proci](./release/app-release.apk)
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/onboarding_router.dart';
+import 'package:proci/onboarding_router.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -233,7 +233,7 @@ class _SplashScreenState extends State<SplashScreen>
                                       colors: [Colors.white, Colors.white70],
                                     ).createShader(bounds),
                                     child: Text(
-                                      'FixMyArea',
+                                      'Proci',
                                       style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,

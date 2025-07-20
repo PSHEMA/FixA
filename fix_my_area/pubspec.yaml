@@ -1,5 +1,5 @@
-name: fix_my_area
-description: "A new Flutter project."
+name: proci
+description: "A mobile marketplace connecting customers with trusted local service providers."
 publish_to: "none"
 
 version: 1.0.0+1
@@ -45,7 +45,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
 
 flutter_icons:
   android: true

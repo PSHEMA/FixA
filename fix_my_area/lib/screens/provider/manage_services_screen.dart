@@ -1,4 +1,4 @@
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class ManageServicesScreen extends StatefulWidget {

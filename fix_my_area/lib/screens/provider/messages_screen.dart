@@ -1,8 +1,8 @@
-import 'package:fix_my_area/chat/chat_screen.dart';
-import 'package:fix_my_area/models/chat_room_model.dart';
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/chat_service.dart';
+import 'package:proci/chat/chat_screen.dart';
+import 'package:proci/models/chat_room_model.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/chat_service.dart';
 import 'package:flutter/material.dart';
 
 class MessagesScreen extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:fix_my_area/theme/app_theme.dart';
-import 'package:fix_my_area/splash_screen.dart';
+import 'package:proci/theme/app_theme.dart';
+import 'package:proci/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class FixMyAreaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FixMyArea',
+      title: 'Proci',
       theme: AppTheme.theme,
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,

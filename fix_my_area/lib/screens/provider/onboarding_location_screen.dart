@@ -1,6 +1,6 @@
-import 'package:fix_my_area/data/kigali_locations.dart';
-import 'package:fix_my_area/screens/provider/main_scaffold_provider.dart';
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/data/kigali_locations.dart';
+import 'package:proci/screens/provider/main_scaffold_provider.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingLocationScreen extends StatefulWidget {

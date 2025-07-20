@@ -1,9 +1,9 @@
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/theme/app_theme.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:fix_my_area/services/storage_service.dart';
+import 'package:proci/services/storage_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final UserModel user;

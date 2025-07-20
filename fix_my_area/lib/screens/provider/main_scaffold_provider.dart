@@ -1,11 +1,11 @@
-import 'package:fix_my_area/models/notification_model.dart';
-import 'package:fix_my_area/screens/notifications/notifications_screen.dart';
-import 'package:fix_my_area/screens/provider/dashboard_screen.dart';
-import 'package:fix_my_area/screens/provider/jobs_screen.dart';
-import 'package:fix_my_area/screens/provider/messages_screen.dart';
-import 'package:fix_my_area/screens/provider/profile_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/notification_service.dart';
+import 'package:proci/models/notification_model.dart';
+import 'package:proci/screens/notifications/notifications_screen.dart';
+import 'package:proci/screens/provider/dashboard_screen.dart';
+import 'package:proci/screens/provider/jobs_screen.dart';
+import 'package:proci/screens/provider/messages_screen.dart';
+import 'package:proci/screens/provider/profile_screen.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
 class MainScaffoldProvider extends StatefulWidget {

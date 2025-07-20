@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/chat_service.dart';
-import 'package:fix_my_area/services/storage_service.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/chat_service.dart';
+import 'package:proci/services/storage_service.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {

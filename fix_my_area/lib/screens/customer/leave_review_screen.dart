@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fix_my_area/models/booking_model.dart';
-import 'package:fix_my_area/models/review_model.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/review_service.dart';
+import 'package:proci/models/booking_model.dart';
+import 'package:proci/models/review_model.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/review_service.dart';
 import 'package:flutter/material.dart';
 
 class LeaveReviewScreen extends StatefulWidget {

@@ -12,12 +12,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Privacy Policy for FixMyArea', style: Theme.of(context).textTheme.headlineSmall),
+            Text('Privacy Policy for Proci', style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 16),
             const Text(
               'Effective Date: June 2025\n\n'
               '1. Introduction\n'
-              'Welcome to FixMyArea. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us.\n\n'
+              'Welcome to Proci. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us.\n\n'
               '2. Information We Collect\n'
               'We collect personal information that you voluntarily provide to us when you register on the application, express an interest in obtaining information about us or our products and services, when you participate in activities on the application or otherwise when you contact us. The personal information we collect includes: Name, Phone Number, Email Address, and for providers, service offerings and business location.\n\n'
               '3. How We Use Your Information\n'

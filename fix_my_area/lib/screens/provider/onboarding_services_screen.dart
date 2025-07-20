@@ -1,5 +1,5 @@
-import 'package:fix_my_area/screens/provider/onboarding_location_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/screens/provider/onboarding_location_screen.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingServicesScreen extends StatefulWidget {

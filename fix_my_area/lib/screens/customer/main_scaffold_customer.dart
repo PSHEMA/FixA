@@ -1,11 +1,11 @@
-import 'package:fix_my_area/models/notification_model.dart';
-import 'package:fix_my_area/screens/customer/bookings_screen.dart';
-import 'package:fix_my_area/screens/customer/home_screen.dart';
-import 'package:fix_my_area/screens/customer/messages_screen.dart';
-import 'package:fix_my_area/screens/customer/profile_screen.dart';
-import 'package:fix_my_area/screens/notifications/notifications_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/notification_service.dart';
+import 'package:proci/models/notification_model.dart';
+import 'package:proci/screens/customer/bookings_screen.dart';
+import 'package:proci/screens/customer/home_screen.dart';
+import 'package:proci/screens/customer/messages_screen.dart';
+import 'package:proci/screens/customer/profile_screen.dart';
+import 'package:proci/screens/notifications/notifications_screen.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
 class MainScaffoldCustomer extends StatefulWidget {
@@ -33,7 +33,7 @@ class _MainScaffoldCustomerState extends State<MainScaffoldCustomer> {
   Widget build(BuildContext context) {
     final String? userId = AuthService().currentUser?.uid;
     final NotificationService notificationService = NotificationService();
-    final List<String> appBarTitles = ['FixMyArea', 'My Bookings', 'Messages', 'My Profile'];
+    final List<String> appBarTitles = ['Proci', 'My Bookings', 'Messages', 'My Profile'];
 
     return Scaffold(
       appBar: AppBar(

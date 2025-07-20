@@ -1,5 +1,5 @@
-import 'package:fix_my_area/auth_gate.dart';
-import 'package:fix_my_area/screens/onboarding/onboarding_screen.dart';
+import 'package:proci/auth_gate.dart';
+import 'package:proci/screens/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

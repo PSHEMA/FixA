@@ -1,4 +1,4 @@
-import 'package:fix_my_area/screens/onboarding/welcome_screen.dart';
+import 'package:proci/screens/onboarding/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,9 +45,9 @@ class _TermsScreenState extends State<TermsScreen> {
                 text: TextSpan(
                   style: Theme.of(context).textTheme.bodyMedium,
                   children: const [
-                    TextSpan(text: 'Welcome to FixMyArea. By using our application, you agree to these terms. \n\n'),
+                    TextSpan(text: 'Welcome to Proci. By using our application, you agree to these terms. \n\n'),
                     TextSpan(text: '1. Service Agreement: ', style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: 'FixMyArea is a platform to connect Customers with Service Providers. We are not a party to any service agreement between users. We do not guarantee the quality, safety, or legality of the services provided.\n\n'),
+                    TextSpan(text: 'Proci is a platform to connect Customers with Service Providers. We are not a party to any service agreement between users. We do not guarantee the quality, safety, or legality of the services provided.\n\n'),
                     TextSpan(text: '2. User Conduct: ', style: TextStyle(fontWeight: FontWeight.bold)),
                     TextSpan(text: 'You agree to provide accurate information and to treat other users with respect. Harassment, spam, and fraudulent activity are strictly prohibited and will result in account termination.\n\n'),
                     TextSpan(text: '3. Reviews: ', style: TextStyle(fontWeight: FontWeight.bold)),

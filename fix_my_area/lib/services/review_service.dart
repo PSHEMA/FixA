@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fix_my_area/models/review_model.dart';
+import 'package:proci/models/review_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fix_my_area/services/notification_service.dart';
+import 'package:proci/services/notification_service.dart';
 
 class ReviewService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

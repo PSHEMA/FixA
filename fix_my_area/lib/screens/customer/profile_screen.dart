@@ -1,13 +1,13 @@
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/screens/customer/edit_profile_screen.dart';
-import 'package:fix_my_area/screens/customer/my_reviews_screen.dart';
-import 'package:fix_my_area/screens/settings/about_screen.dart';
-import 'package:fix_my_area/screens/settings/help_screen.dart';
-import 'package:fix_my_area/screens/settings/language_screen.dart';
-import 'package:fix_my_area/screens/settings/privacy_policy_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/screens/customer/edit_profile_screen.dart';
+import 'package:proci/screens/customer/my_reviews_screen.dart';
+import 'package:proci/screens/settings/about_screen.dart';
+import 'package:proci/screens/settings/help_screen.dart';
+import 'package:proci/screens/settings/language_screen.dart';
+import 'package:proci/screens/settings/privacy_policy_screen.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/theme/app_theme.dart';
+import 'package:proci/theme/app_theme.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -326,7 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 _buildMenuTile(
                   icon: Icons.info_outline,
-                  title: 'About FixMyArea',
+                  title: 'About Proci',
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const AboutScreen()),

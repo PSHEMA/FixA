@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fix_my_area/models/notification_model.dart';
+import 'package:proci/models/notification_model.dart';
 import 'package:flutter/foundation.dart';
 
 class NotificationService {

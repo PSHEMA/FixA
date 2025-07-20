@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/screens/admin/admin_panel_screen.dart';
-import 'package:fix_my_area/screens/customer/main_scaffold_customer.dart';
-import 'package:fix_my_area/screens/provider/main_scaffold_provider.dart';
-import 'package:fix_my_area/screens/login_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/screens/provider/onboarding_services_screen.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/screens/admin/admin_panel_screen.dart';
+import 'package:proci/screens/customer/main_scaffold_customer.dart';
+import 'package:proci/screens/provider/main_scaffold_provider.dart';
+import 'package:proci/screens/login_screen.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/screens/provider/onboarding_services_screen.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});

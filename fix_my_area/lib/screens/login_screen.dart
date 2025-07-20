@@ -1,6 +1,6 @@
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:fix_my_area/screens/signup_screen.dart'; 
+import 'package:proci/screens/signup_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   Text('Welcome Back!', style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
                   const SizedBox(height: 8),
-                  Text('Log in to your FixMyArea account', style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
+                  Text('Log in to your Proci account', style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center),
                   const SizedBox(height: 48),
 
                   TextFormField(

@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:fix_my_area/models/user_model.dart';
-import 'package:fix_my_area/screens/customer/service_providers_screen.dart';
-import 'package:fix_my_area/services/auth_service.dart';
-import 'package:fix_my_area/services/location_service.dart';
+import 'package:proci/models/user_model.dart';
+import 'package:proci/screens/customer/service_providers_screen.dart';
+import 'package:proci/services/auth_service.dart';
+import 'package:proci/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';

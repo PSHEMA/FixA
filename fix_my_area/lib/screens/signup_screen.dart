@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fix_my_area/services/auth_service.dart';
+import 'package:proci/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -73,7 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Text('Join FixMyArea', style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
+                  Text('Join Proci', style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
                   const SizedBox(height: 48),
                   TextFormField(
                     controller: _nameController,

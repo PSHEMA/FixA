@@ -1,6 +1,6 @@
-import 'package:fix_my_area/models/review_model.dart';
-import 'package:fix_my_area/screens/customer/widgets/review_card.dart';
-import 'package:fix_my_area/services/review_service.dart';
+import 'package:proci/models/review_model.dart';
+import 'package:proci/screens/customer/widgets/review_card.dart';
+import 'package:proci/services/review_service.dart';
 import 'package:flutter/material.dart';
 
 class MyReviewsScreen extends StatelessWidget {
