@@ -69,7 +69,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
 
   Widget _buildActionButton({
     required IconData icon,
-    required String label,
+    String? label,
     required VoidCallback onPressed,
     bool isPrimary = false,
   }) {
@@ -85,21 +85,33 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           ),
         ],
       ),
-      child: ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon, size: 18),
-        label: Text(label),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary ? Theme.of(context).primaryColor : Colors.white,
-          foregroundColor: isPrimary ? Colors.white : Theme.of(context).primaryColor,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: isPrimary ? BorderSide.none : BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3)),
-          ),
-        ),
-      ),
+      child: label != null
+          ? ElevatedButton.icon(
+              onPressed: onPressed,
+              icon: Icon(icon, size: 18),
+              label: Text(label),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isPrimary ? Theme.of(context).primaryColor : Colors.white,
+                foregroundColor: isPrimary ? Colors.white : Theme.of(context).primaryColor,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: isPrimary ? BorderSide.none : BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+                ),
+              ),
+            )
+          : IconButton(
+              onPressed: onPressed,
+              icon: Icon(icon),
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Theme.of(context).primaryColor,
+                side: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: const EdgeInsets.all(12),
+              ),
+            ),
     );
   }
 
@@ -145,7 +157,8 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
           widget.provider.name,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
-        backgroundColor: const Color.fromARGB(255, 95, 67, 255),
+        backgroundColor: Colors.grey[50],
+        foregroundColor: Colors.black87,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
       ),
@@ -206,111 +219,57 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         }
 
         return Container(
+          padding: const EdgeInsets.all(16.0),
           width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Theme.of(context).primaryColor.withOpacity(0.1),
-                Colors.white,
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                // Profile Avatar
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+          color: Colors.grey[50],
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Colors.grey.shade300,
+                backgroundImage: widget.provider.photoUrl.isNotEmpty 
+                    ? NetworkImage(widget.provider.photoUrl) 
+                    : null,
+                child: widget.provider.photoUrl.isEmpty 
+                    ? Icon(Icons.person, size: 50, color: Colors.grey[600])
+                    : null,
+              ),
+              const SizedBox(height: 12),
+              // Name and verification badge
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      widget.provider.name, 
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
                       ),
-                    ],
-                  ),
-                  child: CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.grey.shade300,
-                    backgroundImage: widget.provider.photoUrl.isNotEmpty 
-                        ? NetworkImage(widget.provider.photoUrl) 
-                        : null,
-                    child: widget.provider.photoUrl.isEmpty 
-                        ? Icon(
-                            Icons.person, 
-                            size: 60, 
-                            color: Theme.of(context).primaryColor,
-                          ) 
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Name and Rating
-                Text(
-                  widget.provider.name,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 12),
-                
-                if (reviewCount > 0) ...[
-                  _buildRatingRow(avgRating, reviewCount),
-                  const SizedBox(height: 20),
-                ] else ...[
-                  Text(
-                    'No reviews yet',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  if (widget.provider.isVerified) ...[
+                    const SizedBox(width: 8),
+                    const Icon(Icons.verified, color: Colors.blue, size: 24),
+                  ]
                 ],
-
-                // Quick Actions
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildActionButton(
-                      icon: Icons.message_outlined,
-                      label: 'Message',
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ChatScreen(receiver: widget.provider),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    _buildActionButton(
-                      icon: Icons.call_outlined,
-                      label: 'Call',
-                      onPressed: () async {
-                        final Uri launchUri = Uri(scheme: 'tel', path: widget.provider.phone);
-                        if (await canLaunchUrl(launchUri)) {
-                          await launchUrl(launchUri);
-                        } else {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Could not make the call.')),
-                            );
-                          }
-                        }
-                      },
-                    ),
-                  ],
+              ),
+              const SizedBox(height: 4),
+              _buildRatingRow(avgRating, reviewCount),
+              const SizedBox(height: 16),
+              TextButton.icon(
+                onPressed: () => Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (_) => ChatScreen(receiver: widget.provider))
                 ),
-              ],
-            ),
+                icon: const Icon(Icons.message_outlined),
+                label: const Text('Message Provider'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).primaryColor,
+                ),
+              ),
+            ],
           ),
         );
       },
@@ -406,6 +365,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
   }
 
+  // INTEGRATED BOOKING BAR - Now includes both Call and Book Now buttons
   Widget _buildBookingBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -424,72 +384,65 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
         child: Row(
           children: [
             // Rate Information
-            Expanded(
-              flex: 2,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Starting Rate',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Starting Rate',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.provider.rate,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  widget.provider.rate,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 16),
+            
+            // Action Buttons
+            Expanded(
+              child: Row(
+                children: [
+                  // Call Button
+                  _buildActionButton(
+                    icon: Icons.call_outlined,
+                    onPressed: () async {
+                      final Uri launchUri = Uri(scheme: 'tel', path: widget.provider.phone);
+                      if (await canLaunchUrl(launchUri)) {
+                        await launchUrl(launchUri);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Could not make the call.'))
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  
+                  // Book Now Button
+                  Expanded(
+                    child: _buildActionButton(
+                      icon: Icons.calendar_month_outlined,
+                      label: 'Book Now',
+                      isPrimary: true,
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookingScreen(provider: widget.provider),
+                        ),
+                      ),
                     ),
                   ),
                 ],
-              ),
-            ),
-            const SizedBox(width: 16),
-
-            // Book Now Button
-            Expanded(
-              flex: 3,
-              child: Container(
-                height: 48,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor.withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BookingScreen(provider: widget.provider),
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Book Now',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
               ),
             ),
           ],

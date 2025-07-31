@@ -1,10 +1,12 @@
 import 'package:proci/models/booking_model.dart';
+import 'package:proci/models/review_model.dart';
 import 'package:proci/models/user_model.dart';
 import 'package:proci/screens/provider/jobs_screen.dart';
 import 'package:proci/screens/provider/manage_services_screen.dart';
 import 'package:proci/screens/provider/my_reviews_screen.dart';
 import 'package:proci/services/auth_service.dart';
 import 'package:proci/services/booking_service.dart';
+import 'package:proci/services/review_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:proci/screens/provider/manage_availability_screen.dart';
@@ -16,6 +18,7 @@ class DashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
     final BookingService bookingService = BookingService();
+    final ReviewService reviewService = ReviewService();
 
     return Scaffold(
       body: FutureBuilder<UserModel?>(
@@ -111,6 +114,25 @@ class DashboardScreen extends StatelessWidget {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // INTEGRATED RATING CARD - NEW ADDITION
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: StreamBuilder<List<ReviewModel>>(
+                              stream: reviewService.getReviewsForProvider(provider.uid),
+                              builder: (context, reviewSnapshot) {
+                                int reviewCount = 0;
+                                double avgRating = 0.0;
+                                if (reviewSnapshot.hasData && reviewSnapshot.data!.isNotEmpty) {
+                                  reviewCount = reviewSnapshot.data!.length;
+                                  avgRating = reviewSnapshot.data!.map((r) => r.rating).reduce((a, b) => a + b) / reviewCount;
+                                }
+                                return _buildRatingCard(avgRating, reviewCount);
+                              }
                             ),
                           ),
 
@@ -234,6 +256,77 @@ class DashboardScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+
+  // NEW RATING CARD WIDGET - Integrated from the first file but styled to match your design
+  Widget _buildRatingCard(double rating, int reviewCount) {
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFFFF),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1B5E20).withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.amber.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.star,
+              size: 24,
+              color: Colors.amber,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your Public Rating',
+                  style: TextStyle(
+                    color: const Color(0xFF1B1B1B).withOpacity(0.7),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  reviewCount > 0 
+                      ? '${rating.toStringAsFixed(1)} out of 5'
+                      : 'No ratings yet',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1B1B1B),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  reviewCount > 0 
+                      ? 'Based on $reviewCount review${reviewCount == 1 ? '' : 's'}'
+                      : 'Start getting reviews from customers',
+                  style: TextStyle(
+                    color: const Color(0xFF1B1B1B).withOpacity(0.7),
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
