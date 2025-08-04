@@ -21,9 +21,7 @@ class _OnboardingServicesScreenState extends State<OnboardingServicesScreen> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select at least one service.')));
       return;
     }
-    // First, save the services
     AuthService().updateUserProfile({'services': _selectedServices.toList()});
-    // Then navigate to the next step
     Navigator.push(context, MaterialPageRoute(builder: (_) => const OnboardingLocationScreen()));
   }
 

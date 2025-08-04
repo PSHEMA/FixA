@@ -5,7 +5,7 @@ class ReviewModel {
   final String providerId;
   final String customerId;
   final String customerName;
-  final int rating; // 1 to 5 stars
+  final int rating;
   final String comment;
   final Timestamp createdAt;
 
@@ -19,7 +19,6 @@ class ReviewModel {
     required this.createdAt,
   });
 
-  // Convert a ReviewModel instance to a map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'providerId': providerId,
@@ -31,7 +30,6 @@ class ReviewModel {
     };
   }
 
-  // Create a ReviewModel from a Firestore document
   factory ReviewModel.fromFirestore(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return ReviewModel(

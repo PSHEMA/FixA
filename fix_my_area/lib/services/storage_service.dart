@@ -20,7 +20,6 @@ class StorageService {
     return await ref.getDownloadURL();
   }
 
-  // Uploads an image to a specific chat room's folder
   Future<String> uploadChatImage(XFile imageFile, String chatRoomId) async {
     final String fileName = _uuid.v4();
     final ref = _storage.ref().child('chat_images/$chatRoomId/$fileName.jpg');

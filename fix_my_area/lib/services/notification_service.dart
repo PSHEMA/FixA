@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 class NotificationService {
   final CollectionReference _notificationsCollection = FirebaseFirestore.instance.collection('notifications');
 
-  // Create a new notification for a specific user
   Future<void> createNotification({
     required String userId,
     required String title,
@@ -28,17 +27,15 @@ class NotificationService {
     }
   }
 
-  // Get a stream of notifications for a user
   Stream<List<NotificationModel>> getNotifications(String userId) {
     return _notificationsCollection
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
-        .limit(30) // Get the latest 30 notifications
+        .limit(30)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => NotificationModel.fromFirestore(doc)).toList());
   }
 
-  // Mark all unread notifications as read
   Future<void> markAllAsRead(String userId) async {
     final querySnapshot = await _notificationsCollection
         .where('userId', isEqualTo: userId)

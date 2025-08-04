@@ -119,7 +119,6 @@ class DashboardScreen extends StatelessWidget {
 
                           const SizedBox(height: 24),
 
-                          // INTEGRATED RATING CARD - NEW ADDITION
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             child: StreamBuilder<List<ReviewModel>>(
@@ -260,7 +259,6 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  // NEW RATING CARD WIDGET - Integrated from the first file but styled to match your design
   Widget _buildRatingCard(double rating, int reviewCount) {
     return Container(
       padding: const EdgeInsets.all(20.0),

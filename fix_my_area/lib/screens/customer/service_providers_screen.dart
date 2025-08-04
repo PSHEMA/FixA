@@ -65,7 +65,7 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
                     child: provider.photoUrl.isEmpty ? const Icon(Icons.person) : null,
                   ),
                   title: Text(provider.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text('Location: ${provider.sector}, ${provider.district}'),
+                  subtitle: Text(provider.bio.isNotEmpty ? provider.bio : 'No bio available'),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ProviderProfileScreen(provider: provider))),
                 ),

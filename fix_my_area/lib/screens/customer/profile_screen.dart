@@ -272,11 +272,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                // Profile Header Section
                 _buildProfileHeader(user),
                 const SizedBox(height: 24),
 
-                // Account Section
                 _buildSectionDivider('ACCOUNT'),
                 _buildMenuTile(
                   icon: Icons.edit_outlined,
@@ -298,7 +296,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                // Settings Section
                 _buildSectionDivider('SETTINGS'),
                 _buildMenuTile(
                   icon: Icons.language_outlined,
@@ -333,7 +330,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                // Sign Out Section
                 _buildSectionDivider(''),
                 _buildSignOutButton(),
                 const SizedBox(height: 32),

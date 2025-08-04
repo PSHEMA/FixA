@@ -196,7 +196,7 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                   // Reviews Section
                   _buildSectionHeader('Reviews'),
                   _buildReviewsSection(),
-                  const SizedBox(height: 100), // Space for bottom bar
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
@@ -235,7 +235,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
                     : null,
               ),
               const SizedBox(height: 12),
-              // Name and verification badge
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -365,7 +364,6 @@ class _ProviderProfileScreenState extends State<ProviderProfileScreen> {
     );
   }
 
-  // INTEGRATED BOOKING BAR - Now includes both Call and Book Now buttons
   Widget _buildBookingBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),

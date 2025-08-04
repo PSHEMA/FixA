@@ -73,7 +73,7 @@ class AuthService {
       QuerySnapshot snapshot = await _firestore
           .collection('users')
           .where('role', isEqualTo: 'provider')
-          .where('isVerified', isEqualTo: true) // ** ADD THIS LINE **
+          .where('isVerified', isEqualTo: true)
           .where('services', arrayContains: category)
           .get();
       return snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList();

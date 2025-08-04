@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:proci/models/user_model.dart';
+import 'package:proci/screens/customer/provider_profile_screen.dart';
 import 'package:proci/screens/customer/service_providers_screen.dart';
 import 'package:proci/services/auth_service.dart';
 import 'package:proci/services/location_service.dart';
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Completer<GoogleMapController> _mapController = Completer();
   
   Future<UserModel?>? _userDetailsFuture;
+  Set<Marker> _mapMarkers = {};
   CameraPosition _initialCameraPosition = const CameraPosition(
     target: LatLng(-1.9441, 30.0619), 
     zoom: 12
@@ -40,10 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _userDetailsFuture = _authService.getUserDetails();
     _filteredCategories = _allServiceCategories;
-    _centerMapOnUser();
+    // Load both user location and provider markers
+    _loadMapData();
   }
 
-  Future<void> _centerMapOnUser() async {
+  Future<void> _loadMapData() async {
+    // 1. Center map on user's current location
     Position? currentPosition = await _locationService.getCurrentPosition();
     if (currentPosition != null && mounted) {
       final newPosition = CameraPosition(
@@ -56,6 +60,33 @@ class _HomeScreenState extends State<HomeScreen> {
         _initialCameraPosition = newPosition;
       });
     }
+    
+    // 2. Load all providers and create markers for them
+    final providers = await _authService.getAllProviders();
+    final Set<Marker> markers = {};
+    for (final provider in providers) {
+      // Only create a marker if the provider has set their location
+      if (provider.location != null) {
+        markers.add(
+          Marker(
+            markerId: MarkerId(provider.uid),
+            position: LatLng(provider.location!.latitude, provider.location!.longitude),
+            infoWindow: InfoWindow(
+              title: provider.name,
+              snippet: 'Tap to view profile',
+              onTap: () => Navigator.push(
+                context, 
+                MaterialPageRoute(
+                  builder: (_) => ProviderProfileScreen(provider: provider)
+                )
+              )
+            ),
+            icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          )
+        );
+      }
+    }
+    if(mounted) setState(() => _mapMarkers = markers);
   }
 
   void _filterServices(String query) {
@@ -216,9 +247,9 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Map Section
+              // Map Section with Provider Markers
               Text(
-                'Your Area Map',
+                'Providers Near You',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -247,7 +278,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _mapController.complete(controller);
                       }
                     },
-                    markers: const {},
+                    // THE PAYOFF: The map now displays all the provider markers
+                    markers: _mapMarkers,
                     myLocationEnabled: true,
                     myLocationButtonEnabled: true,
                     zoomControlsEnabled: false,

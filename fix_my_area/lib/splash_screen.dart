@@ -26,8 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    
-    // Initialize animation controllers
+
     _logoController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -48,7 +47,6 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    // Logo animations
     _logoScaleAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -65,7 +63,6 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.easeOutBack,
     ));
 
-    // Text animations
     _textFadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -99,8 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
     ));
 
     _startAnimationSequence();
-    
-    // Navigate after delay
+
     Timer(const Duration(milliseconds: 2500), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const OnboardingRouter()),
@@ -176,8 +172,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   );
                 }),
-                
-                // Main content
+
                 Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

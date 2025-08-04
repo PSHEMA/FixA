@@ -11,7 +11,6 @@ class BookingService {
   final CollectionReference _bookingsCollection = FirebaseFirestore.instance.collection('bookings');
   final NotificationService _notificationService = NotificationService();
 
-  // Create a new booking
   Future<void> createBooking(BookingModel booking) async {
     try {
       await _bookingsCollection.add(booking.toMap());
@@ -28,7 +27,6 @@ class BookingService {
     }
   }
 
-  // Get a stream of bookings for a specific customer
   Stream<List<BookingModel>> getBookingsForCustomer(String customerId) {
     return _bookingsCollection
         .where('customerId', isEqualTo: customerId)
@@ -39,7 +37,6 @@ class BookingService {
     });
   }
 
-  // Get a stream of bookings for a specific provider
   Stream<List<BookingModel>> getBookingsForProvider(String providerId) {
     return _bookingsCollection
         .where('providerId', isEqualTo: providerId)
@@ -50,7 +47,6 @@ class BookingService {
     });
   }
 
-  // Update the status of a booking
   Future<void> updateBookingStatus(String bookingId, String status) async {
     try {
       await _bookingsCollection.doc(bookingId).update({'status': status});

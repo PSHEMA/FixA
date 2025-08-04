@@ -9,7 +9,6 @@ class ReviewService {
   final CollectionReference _bookingsCollection = FirebaseFirestore.instance.collection('bookings');
   final NotificationService _notificationService = NotificationService();
 
-  // Submit a review and mark the booking as reviewed in one transaction
   Future<void> submitReview(ReviewModel review, String bookingId) async {
     try {
       WriteBatch batch = _firestore.batch();
@@ -32,7 +31,6 @@ class ReviewService {
     }
   }
 
-  // Get all reviews for a specific provider
   Stream<List<ReviewModel>> getReviewsForProvider(String providerId) {
     return _reviewsCollection
         .where('providerId', isEqualTo: providerId)

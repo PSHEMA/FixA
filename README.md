@@ -14,7 +14,7 @@ This project was developed as a Capstone for the BSc. in Software Engineering pr
 ### 🚀 Core Functionalities
 
 #### For Customers:
-- **Live Geolocation Map:** View an interactive map centered on your current location.
+- **Live Geolocation Map:** View an interactive map centered on your current location,populated with nearby providers.
 -  **Service Discovery:** Browse service categories or use a live search to find what you need.
 -  **View Provider Listings:** See a list of available providers for a selected category.
 -  **Detailed Provider Profiles:** View a provider's bio, services offered, starting rate, and customer reviews.
@@ -105,16 +105,17 @@ Follow these steps to run the application on your local machine.
 #### **Step 2: Firebase Project Setup**
 1.  Create a new project on the [Firebase Console](https://console.firebase.google.com/).
 2.  Enable **Authentication** (with Email/Password provider), **Firestore Database**, and **Storage**.
-3.  Configure the Firestore and Storage security rules as specified in the project documentation (or use test mode for initial setup).
+3.  Configure the Firestore and Storage security rules(or use test mode for initial setup).
 4.  Follow the instructions to add a new **Flutter App** to your Firebase project. This will involve using the `flutterfire_cli` to generate the `lib/firebase_options.dart` file for your project.
 
 #### **Step 3: API Keys**
 1.  Go to the [Google Cloud Console](https://console.cloud.google.com/) for your Firebase project.
-2.  Enable **Maps SDK for Android** and **Maps SDK for iOS**.
+2.  Enable **Maps SDK for Android**, **Maps SDK for iOS** and **Maps JavaScript API**.
 3.  Create an API key from the **APIs & Services > Credentials** page.
 4.  Add the API Key to the following files:
     * `android/app/src/main/AndroidManifest.xml`
     * `ios/Runner/AppDelegate.swift`
+    * `web/index.html`
 
 #### **Step 4: Running the App**
 1.  Clone this repository:

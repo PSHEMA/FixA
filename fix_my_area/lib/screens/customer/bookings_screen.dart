@@ -77,7 +77,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
                                 children: [
                                   TextButton(
                                     onPressed: () async {
-                                      // Show a confirmation dialog
                                       final bool? confirm = await showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
@@ -98,7 +97,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
                                   const SizedBox(width: 8),
                                   ElevatedButton(
                                     onPressed: () async {
-                                      // Show date/time picker to reschedule
                                       final newDateTime = await _showRescheduleDialog(context, booking.bookingTime);
                                       if (newDateTime != null) {
                                         await BookingService().updateBookingTime(booking.id, newDateTime);
@@ -119,7 +117,6 @@ class _BookingsScreenState extends State<BookingsScreen> {
     );
   }
 
-  // Helper method for reschedule dialog
   Future<DateTime?> _showRescheduleDialog(BuildContext context, DateTime initialDate) async {
     final newDate = await showDatePicker(
       context: context, 

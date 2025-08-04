@@ -41,28 +41,24 @@ class _BookingScreenState extends State<BookingScreen> {
     super.dispose();
   }
 
-  // NEW LOGIC: This function checks if a day should be disabled
   bool _isDateSelectable(DateTime day) {
-    // 1. Check if the day is in the provider's days off
     for (var dayOff in widget.provider.daysOff) {
       DateTime dayOffDate = dayOff.toDate();
       if (dayOffDate.year == day.year &&
           dayOffDate.month == day.month &&
           dayOffDate.day == day.day) {
-        return false; // It's a day off
+        return false;
       }
     }
-    
-    // 2. Check if the provider works on this day of the week
-    String weekday = DateFormat('EEEE').format(day); // e.g., "Monday"
+
+    String weekday = DateFormat('EEEE').format(day);
     if (!widget.provider.workingHours.containsKey(weekday)) {
-      return false; // Doesn't work on this day
+      return false;
     }
-    
-    // 3. Check if the working hours for this day are not empty/null
+
     var dayHours = widget.provider.workingHours[weekday];
     if (dayHours == null || dayHours.toString().isEmpty) {
-      return false; // No working hours set for this day
+      return false;
     }
     
     return true;
@@ -74,13 +70,10 @@ class _BookingScreenState extends State<BookingScreen> {
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
-      // Temporarily commented out to debug
-      // selectableDayPredicate: _isDateSelectable,
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        // Reset time when date changes
         _selectedTime = null;
       });
     }
@@ -106,7 +99,6 @@ class _BookingScreenState extends State<BookingScreen> {
 
     setState(() => _isLoading = true);
 
-    // Fetch current user details to get their name
     final currentUser = await _authService.getUserDetails();
     if (currentUser == null) {
       setState(() => _isLoading = false);

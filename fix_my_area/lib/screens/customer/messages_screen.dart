@@ -59,7 +59,7 @@ class MessagesScreen extends StatelessWidget {
                     final tempReceiver = UserModel(
                       uid: otherUserId,
                       name: otherUserName,
-                      email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: '', district: '', sector: '', workingHours: {}, daysOff: [],isVerified: false
+                      email: '', phone: '', role: '', services: [], bio: '', rate: '', photoUrl: '', workingHours: {}, daysOff: [],isVerified: false
                     );
                     Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen(receiver: tempReceiver)));
                   },
